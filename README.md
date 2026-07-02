@@ -4,7 +4,7 @@ A premium, highly-customizable sidebar sound mixer extension for your IDE design
 
 ## Features
 
-- **12 Audio Channels**: Organized into collapsible categories (Nature, Weather, Cozy, Music).
+- **14 Audio Channels**: Organized into collapsible categories (Nature, Weather, Cozy, Music).
 - **⏭ Skip Track**: Each channel contains a library of 3-5 alternate tracks. Cycle through them instantly.
 - **🔊 Master Volume**: Proportional global volume scaling.
 - **📻 Web Audio White Noise**: Procedurally generated continuous white noise (no files, zero-latency).

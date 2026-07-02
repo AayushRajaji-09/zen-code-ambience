@@ -1,0 +1,7 @@
+# Ignore all files/folders in the root by default
+/*
+
+# Allow tracking of only the extension folder, README, and .gitignore
+!.gitignore
+!README.md
+!zen-code-ambience/

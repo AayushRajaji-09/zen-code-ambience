@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zen Ambience Mixer</title>
+  <style>
+    :root {
+      --bg-dark: #07080b;
+      --bg-card: rgba(18, 20, 29, 0.6);
+      --bg-card-active: rgba(26, 29, 43, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(99, 102, 241, 0.35);
+      --text-primary: #e5e7eb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-color: #6366f1;
+      --accent-light: #818cf8;
+      --accent-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --nature-color: #22c55e;
+      --weather-color: #3b82f6;
+      --cozy-color: #f59e0b;
+      --music-color: #ec4899;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      user-select: none;
+    }
+
+    /* Scrollbar styling */
+    body::-webkit-scrollbar { width: 4px; }
+    body::-webkit-scrollbar-track { background: transparent; }
+    body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+    body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+    /* ─── Header ─── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: var(--accent-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .header-actions { display: flex; gap: 0.4rem; align-items: center; }
+
+    .master-btn {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 3px 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .master-btn:hover { background: #ef4444; color: white; }
+
+    /* ─── Master Volume ─── */
+    .master-volume {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.65rem;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: 10px;
+    }
+    .master-volume-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      white-space: nowrap;
+    }
+    .master-volume .slider { flex-grow: 1; }
+    .master-volume .vol-label { font-size: 0.7rem; color: var(--accent-light); font-family: monospace; width: 28px; text-align: right; }
+
+
+    /* ─── Category Section ─── */
+    .category-section { margin-bottom: 0.6rem; }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
+      cursor: pointer;
+      padding: 0.25rem 0;
+    }
+    .category-emoji { font-size: 0.8rem; }
+    .category-name {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .category-name.nature { color: var(--nature-color); }
+    .category-name.weather { color: var(--weather-color); }
+    .category-name.cozy { color: var(--cozy-color); }
+    .category-name.music { color: var(--music-color); }
+
+    .category-line {
+      flex-grow: 1;
+      height: 1px;
+      border-radius: 1px;
+    }
+    .category-line.nature { background: linear-gradient(90deg, var(--nature-color) 0%, transparent 100%); }
+    .category-line.weather { background: linear-gradient(90deg, var(--weather-color) 0%, transparent 100%); }
+    .category-line.cozy { background: linear-gradient(90deg, var(--cozy-color) 0%, transparent 100%); }
+    .category-line.music { background: linear-gradient(90deg, var(--music-color) 0%, transparent 100%); }
+
+    .category-toggle {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+    .category-header.collapsed .category-toggle { transform: rotate(-90deg); }
+    .category-body { display: flex; flex-direction: column; gap: 0.5rem; }
+    .category-body.hidden { display: none; }
+
+    /* ─── Channel Card ─── */
+    .channel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.55rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      transition: all 0.25s ease;
+    }
+    .channel-card.active {
+      background: var(--bg-card-active);
+      border-color: var(--border-active);
+      box-shadow: 0 2px 12px rgba(99, 102, 241, 0.1);
+      animation: pulse-border 2s ease-in-out infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--border-active); }
+      50% { border-color: rgba(99, 102, 241, 0.55); }
+    }
+
+    .channel-info { display: flex; align-items: center; justify-content: space-between; }
+    .channel-meta { display: flex; align-items: center; gap: 0.5rem; }
+    .channel-emoji { font-size: 1rem; }
+    .channel-name { font-size: 0.78rem; font-weight: 600; }
+
+    .channel-actions { display: flex; align-items: center; gap: 0.3rem; }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.65rem;
+      transition: all 0.2s;
+    }
+    .action-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .action-btn.play-btn { width: 26px; height: 26px; font-size: 0.7rem; }
+
+    .channel-card.active .play-btn {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+    }
+
+    .skip-btn { font-size: 0.55rem; }
+    .skip-btn:hover { color: var(--accent-light); }
+
+    .control-row { display: flex; align-items: center; gap: 0.5rem; }
+
+    .slider {
+      flex-grow: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+      transition: background 0.15s;
+    }
+    .channel-card.active .slider::-webkit-slider-thumb {
+      background: var(--accent-color);
+      box-shadow: 0 0 5px var(--accent-color);
+    }
+    .master-volume .slider::-webkit-slider-thumb {
+      background: var(--accent-color);
+      box-shadow: 0 0 5px var(--accent-color);
+    }
+
+    .vol-label {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      font-family: monospace;
+      width: 22px;
+      text-align: right;
+    }
+
+    /* ─── Equalizer ─── */
+    .eq-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5px;
+      height: 10px;
+      width: 16px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .channel-card.active .eq-container { opacity: 1; }
+    .eq-bar {
+      width: 2px;
+      background-color: var(--accent-color);
+      border-radius: 1px;
+      animation: bounce 0.8s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { height: 100%; animation-delay: -0.2s; }
+    .eq-bar:nth-child(2) { height: 60%; animation-delay: -0.5s; }
+    .eq-bar:nth-child(3) { height: 80%; animation-delay: -0.3s; }
+    .eq-bar:nth-child(4) { height: 40%; animation-delay: -0.7s; }
+    @keyframes bounce {
+      0% { transform: scaleY(0.2); }
+      100% { transform: scaleY(1.0); }
+    }
+
+    /* ─── Track Info ─── */
+    .track-info {
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding-left: 1.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0;
+      max-height: 0;
+      transition: all 0.2s;
+    }
+    .channel-card.active .track-info {
+      opacity: 1;
+      max-height: 1.2rem;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      margin-top: auto;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 0.55rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <span class="title">🧘 Zen Ambience</span>
+    <div class="header-actions">
+      <button class="master-btn" id="stop-all-btn" onclick="stopAll()">⏹ Mute All</button>
+    </div>
+  </div>
+
+  <!-- Master Volume -->
+  <div class="master-volume">
+    <span class="master-volume-label">🔊 Master</span>
+    <input type="range" class="slider" id="master-slider" min="0" max="100" value="80" oninput="changeMasterVolume(this.value)">
+    <span class="vol-label" id="master-vol">80%</span>
+  </div>
+
+  <!-- ═══════════════ NATURE ═══════════════ -->
+  <div class="category-section">
+    <div class="category-header" onclick="toggleCategory('nature')">
+      <span class="category-emoji">🌿</span>
+      <span class="category-name nature">Nature</span>
+      <div class="category-line nature"></div>
+      <span class="category-toggle">▼</span>
+    </div>
+    <div class="category-body" id="cat-nature">
+
+      <div class="channel-card" id="card-rain">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🌧️</span>
+            <span class="channel-name">Heavy Rain</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('rain')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('rain')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-rain" min="0" max="100" value="60" oninput="changeVolume('rain', this.value)">
+          <span class="vol-label" id="vol-rain">60%</span>
+        </div>
+        <div class="track-info" id="track-rain">Track 1/4</div>
+        <audio id="audio-rain" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-forest">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🌲</span>
+            <span class="channel-name">Forest Wind</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('forest')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('forest')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-forest" min="0" max="100" value="40" oninput="changeVolume('forest', this.value)">
+          <span class="vol-label" id="vol-forest">40%</span>
+        </div>
+        <div class="track-info" id="track-forest">Track 1/4</div>
+        <audio id="audio-forest" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-river">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🌊</span>
+            <span class="channel-name">Flowing River</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('river')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('river')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-river" min="0" max="100" value="40" oninput="changeVolume('river', this.value)">
+          <span class="vol-label" id="vol-river">40%</span>
+        </div>
+        <div class="track-info" id="track-river">Track 1/4</div>
+        <audio id="audio-river" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-birds">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🐦</span>
+            <span class="channel-name">Singing Birds</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('birds')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('birds')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-birds" min="0" max="100" value="35" oninput="changeVolume('birds', this.value)">
+          <span class="vol-label" id="vol-birds">35%</span>
+        </div>
+        <div class="track-info" id="track-birds">Track 1/3</div>
+        <audio id="audio-birds" loop preload="none"></audio>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ WEATHER ═══════════════ -->
+  <div class="category-section">
+    <div class="category-header" onclick="toggleCategory('weather')">
+      <span class="category-emoji">⚡</span>
+      <span class="category-name weather">Weather</span>
+      <div class="category-line weather"></div>
+      <span class="category-toggle">▼</span>
+    </div>
+    <div class="category-body" id="cat-weather">
+
+      <div class="channel-card" id="card-thunder">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">⛈️</span>
+            <span class="channel-name">Thunder Storm</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('thunder')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('thunder')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-thunder" min="0" max="100" value="45" oninput="changeVolume('thunder', this.value)">
+          <span class="vol-label" id="vol-thunder">45%</span>
+        </div>
+        <div class="track-info" id="track-thunder">Track 1/3</div>
+        <audio id="audio-thunder" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-wind">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">💨</span>
+            <span class="channel-name">Howling Wind</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('wind')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('wind')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-wind" min="0" max="100" value="35" oninput="changeVolume('wind', this.value)">
+          <span class="vol-label" id="vol-wind">35%</span>
+        </div>
+        <div class="track-info" id="track-wind">Track 1/3</div>
+        <audio id="audio-wind" loop preload="none"></audio>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ COZY ═══════════════ -->
+  <div class="category-section">
+    <div class="category-header" onclick="toggleCategory('cozy')">
+      <span class="category-emoji">🔥</span>
+      <span class="category-name cozy">Cozy</span>
+      <div class="category-line cozy"></div>
+      <span class="category-toggle">▼</span>
+    </div>
+    <div class="category-body" id="cat-cozy">
+
+      <div class="channel-card" id="card-campfire">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🏕️</span>
+            <span class="channel-name">Campfire</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('campfire')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('campfire')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-campfire" min="0" max="100" value="50" oninput="changeVolume('campfire', this.value)">
+          <span class="vol-label" id="vol-campfire">50%</span>
+        </div>
+        <div class="track-info" id="track-campfire">Track 1/3</div>
+        <audio id="audio-campfire" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-train">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🚂</span>
+            <span class="channel-name">Train Journey</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('train')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('train')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-train" min="0" max="100" value="50" oninput="changeVolume('train', this.value)">
+          <span class="vol-label" id="vol-train">50%</span>
+        </div>
+        <div class="track-info" id="track-train">Track 1/3</div>
+        <audio id="audio-train" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-cafe">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">☕</span>
+            <span class="channel-name">Café Chatter</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('cafe')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('cafe')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-cafe" min="0" max="100" value="45" oninput="changeVolume('cafe', this.value)">
+          <span class="vol-label" id="vol-cafe">45%</span>
+        </div>
+        <div class="track-info" id="track-cafe">Track 1/4</div>
+        <audio id="audio-cafe" loop preload="none"></audio>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ MUSIC ═══════════════ -->
+  <div class="category-section">
+    <div class="category-header" onclick="toggleCategory('music')">
+      <span class="category-emoji">🎵</span>
+      <span class="category-name music">Music</span>
+      <div class="category-line music"></div>
+      <span class="category-toggle">▼</span>
+    </div>
+    <div class="category-body" id="cat-music">
+
+      <div class="channel-card" id="card-lofi">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🎧</span>
+            <span class="channel-name">Lofi Focus</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('lofi')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('lofi')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-lofi" min="0" max="100" value="40" oninput="changeVolume('lofi', this.value)">
+          <span class="vol-label" id="vol-lofi">40%</span>
+        </div>
+        <div class="track-info" id="track-lofi">Track 1/5</div>
+        <audio id="audio-lofi" loop preload="none"></audio>
+      </div>
+
+      <div class="channel-card" id="card-piano">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🎹</span>
+            <span class="channel-name">Deep Focus Piano</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('piano')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('piano')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-piano" min="0" max="100" value="40" oninput="changeVolume('piano', this.value)">
+          <span class="vol-label" id="vol-piano">40%</span>
+        </div>
+        <div class="track-info" id="track-piano">Track 1/5</div>
+        <audio id="audio-piano" loop preload="none"></audio>
+
+      </div>
+
+      <div class="channel-card" id="card-whitenoise">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">📻</span>
+            <span class="channel-name">White Noise</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn play-btn" onclick="togglePlay('whitenoise')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-whitenoise" min="0" max="100" value="25" oninput="changeVolume('whitenoise', this.value)">
+          <span class="vol-label" id="vol-whitenoise">25%</span>
+        </div>
+        <div class="track-info" id="track-whitenoise">Procedural</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="footer-text">Zen Ambience v2.0 · Mix your perfect soundscape</span>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════
+    // Audio Source Library — multiple tracks per channel
+    // ═══════════════════════════════════════════════════
+    const NOCTUNE = 'https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds';
+    const SOUNDHELIX = 'https://www.soundhelix.com/examples/mp3';
+
+    const trackLibrary = {
+      rain:      [`${NOCTUNE}/rain.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-12.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`],
+      forest:    [`${NOCTUNE}/forest.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`],
+      river:     [`${NOCTUNE}/river.mp3`, `${SOUNDHELIX}/SoundHelix-Song-11.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`],
+      birds:     [`${NOCTUNE}/night.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`],
+      thunder:   [`${NOCTUNE}/thunder.mp3`, `${SOUNDHELIX}/SoundHelix-Song-11.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
+      wind:      [`${NOCTUNE}/wind.mp3`, `${SOUNDHELIX}/SoundHelix-Song-12.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`],
+      campfire:  [`${NOCTUNE}/campfire.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`],
+      train:     [`${NOCTUNE}/train.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
+      cafe:      [`${SOUNDHELIX}/SoundHelix-Song-2.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`],
+      lofi:      [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-5.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
+      piano:     [`${SOUNDHELIX}/SoundHelix-Song-3.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`],
+    };
+
+    // Track the current track index per channel
+    const currentTrackIndex = {};
+    Object.keys(trackLibrary).forEach(id => { currentTrackIndex[id] = 0; });
+
+    const channels = ['rain', 'forest', 'river', 'birds', 'thunder', 'wind', 'campfire', 'train', 'cafe', 'lofi', 'piano', 'whitenoise'];
+
+    let masterVolume = 80;
+
+    // ─── White Noise via Web Audio API ───
+    let whiteNoiseCtx = null;
+    let whiteNoiseNode = null;
+    let whiteNoiseGain = null;
+    let whiteNoisePlaying = false;
+
+    function createWhiteNoise() {
+      if (whiteNoiseCtx) return;
+      whiteNoiseCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const bufferSize = 2 * whiteNoiseCtx.sampleRate;
+      const noiseBuffer = whiteNoiseCtx.createBuffer(1, bufferSize, whiteNoiseCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+      whiteNoiseNode = whiteNoiseCtx.createBufferSource();
+      whiteNoiseNode.buffer = noiseBuffer;
+      whiteNoiseNode.loop = true;
+      whiteNoiseGain = whiteNoiseCtx.createGain();
+      const sliderVal = document.getElementById('slider-whitenoise').value;
+      whiteNoiseGain.gain.value = (sliderVal / 100) * (masterVolume / 100);
+      whiteNoiseNode.connect(whiteNoiseGain);
+      whiteNoiseGain.connect(whiteNoiseCtx.destination);
+    }
+
+    // ─── Load current track for a channel ───
+    function loadTrack(id) {
+      if (id === 'whitenoise') return;
+      const audio = document.getElementById(`audio-${id}`);
+      const tracks = trackLibrary[id];
+      const idx = currentTrackIndex[id];
+      audio.src = tracks[idx];
+      const trackInfoEl = document.getElementById(`track-${id}`);
+      if (trackInfoEl) trackInfoEl.textContent = `Track ${idx + 1}/${tracks.length}`;
+    }
+
+    // Initialize all audio sources
+    Object.keys(trackLibrary).forEach(id => loadTrack(id));
+
+    // ─── Skip Track ───
+    function skipTrack(id) {
+      if (id === 'whitenoise') return;
+      const tracks = trackLibrary[id];
+      if (tracks.length <= 1) return;
+
+      const audio = document.getElementById(`audio-${id}`);
+      const wasPlaying = !audio.paused;
+
+      currentTrackIndex[id] = (currentTrackIndex[id] + 1) % tracks.length;
+      loadTrack(id);
+
+      if (wasPlaying) {
+        const slider = document.getElementById(`slider-${id}`);
+        audio.volume = (slider.value / 100) * (masterVolume / 100);
+        audio.play().catch(err => console.error('Skip playback error:', err));
+      }
+    }
+
+    // ─── Fade helper ───
+    function fadeVolume(audio, from, to, duration, callback) {
+      const steps = 15;
+      const stepTime = duration / steps;
+      const diff = (to - from) / steps;
+      let current = from;
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+        current += diff;
+        audio.volume = Math.max(0, Math.min(1, current));
+        if (step >= steps) {
+          clearInterval(interval);
+          audio.volume = Math.max(0, Math.min(1, to));
+          if (callback) callback();
+        }
+      }, stepTime);
+    }
+
+    // ─── Toggle Play/Pause ───
+    function togglePlay(id) {
+      const card = document.getElementById(`card-${id}`);
+      const btn = card.querySelector('.play-btn');
+
+      if (id === 'whitenoise') {
+        if (!whiteNoisePlaying) {
+          createWhiteNoise();
+          whiteNoiseNode.start(0);
+          whiteNoisePlaying = true;
+          card.classList.add('active');
+          btn.textContent = '⏸';
+        } else {
+          if (whiteNoiseCtx) {
+            whiteNoiseNode.stop();
+            whiteNoiseCtx.close();
+            whiteNoiseCtx = null;
+            whiteNoiseNode = null;
+            whiteNoiseGain = null;
+          }
+          whiteNoisePlaying = false;
+          card.classList.remove('active');
+          btn.textContent = '▶';
+        }
+        return;
+      }
+
+      const audio = document.getElementById(`audio-${id}`);
+      const slider = document.getElementById(`slider-${id}`);
+      const targetVol = (slider.value / 100) * (masterVolume / 100);
+
+      if (audio.paused) {
+        audio.volume = 0;
+        audio.play().then(() => {
+          card.classList.add('active');
+          btn.textContent = '⏸';
+          fadeVolume(audio, 0, targetVol, 300);
+        }).catch(err => console.error('Playback error:', err));
+      } else {
+        fadeVolume(audio, audio.volume, 0, 300, () => {
+          audio.pause();
+          card.classList.remove('active');
+          btn.textContent = '▶';
+        });
+      }
+    }
+
+    // ─── Volume Control ───
+    function changeVolume(id, val) {
+      const label = document.getElementById(`vol-${id}`);
+      label.textContent = `${val}%`;
+
+      if (id === 'whitenoise') {
+        if (whiteNoiseGain) {
+          whiteNoiseGain.gain.value = (val / 100) * (masterVolume / 100);
+        }
+        return;
+      }
+      const audio = document.getElementById(`audio-${id}`);
+      audio.volume = (val / 100) * (masterVolume / 100);
+    }
+
+    // ─── Master Volume ───
+    function changeMasterVolume(val) {
+      masterVolume = parseInt(val);
+      document.getElementById('master-vol').textContent = `${val}%`;
+
+      channels.forEach(id => {
+        if (id === 'whitenoise') {
+          if (whiteNoiseGain) {
+            const sliderVal = document.getElementById('slider-whitenoise').value;
+            whiteNoiseGain.gain.value = (sliderVal / 100) * (masterVolume / 100);
+          }
+          return;
+        }
+        const audio = document.getElementById(`audio-${id}`);
+        const slider = document.getElementById(`slider-${id}`);
+        if (!audio.paused) {
+          audio.volume = (slider.value / 100) * (masterVolume / 100);
+        }
+      });
+    }
+
+    // ─── Mute All ───
+    function stopAll() {
+      channels.forEach(id => {
+        const card = document.getElementById(`card-${id}`);
+        const btn = card.querySelector('.play-btn');
+
+        if (id === 'whitenoise') {
+          if (whiteNoisePlaying && whiteNoiseCtx) {
+            whiteNoiseNode.stop();
+            whiteNoiseCtx.close();
+            whiteNoiseCtx = null;
+            whiteNoiseNode = null;
+            whiteNoiseGain = null;
+            whiteNoisePlaying = false;
+          }
+          card.classList.remove('active');
+          btn.textContent = '▶';
+          return;
+        }
+
+        const audio = document.getElementById(`audio-${id}`);
+        audio.pause();
+        card.classList.remove('active');
+        btn.textContent = '▶';
+      });
+    }
+
+    // ─── Category Toggle ───
+    function toggleCategory(cat) {
+      const body = document.getElementById(`cat-${cat}`);
+      const header = body.previousElementSibling;
+      body.classList.toggle('hidden');
+      header.classList.toggle('collapsed');
+    }
+  </script>
+</body>
+</html>

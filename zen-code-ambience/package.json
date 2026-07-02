@@ -1,0 +1,37 @@
+{
+  "name": "zen-code-ambience",
+  "displayName": "Zen Code Ambience Player",
+  "description": "Premium multi-channel ambient sound mixer and player in the sidebar.",
+  "version": "1.0.0",
+  "publisher": "aayush",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zen-ambience-container",
+          "title": "Zen Ambience",
+          "icon": "resources/music-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "zen-ambience-container": [
+        {
+          "type": "webview",
+          "id": "zen-ambience.view",
+          "name": "Ambient Mixer"
+        }
+      ]
+    }
+  }
+}

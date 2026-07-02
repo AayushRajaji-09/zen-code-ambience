@@ -12,19 +12,19 @@ $NOCTUNE = "https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds"
 $SOUNDHELIX = "https://www.soundhelix.com/examples/mp3"
 
 $trackLibrary = @{
-    "1"  = @{ Name = "Heavy Rain";         Emoji = "🌧️";  Tracks = @("$NOCTUNE/rain.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3") }
-    "2"  = @{ Name = "Forest Wind";        Emoji = "🌲";  Tracks = @("$NOCTUNE/forest.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3") }
-    "3"  = @{ Name = "Flowing River";       Emoji = "🌊";  Tracks = @("$NOCTUNE/river.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3") }
-    "4"  = @{ Name = "Singing Birds";      Emoji = "🐦";  Tracks = @("$NOCTUNE/night.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3") }
-    "5"  = @{ Name = "Thunder Storm";      Emoji = "⛈️";  Tracks = @("$NOCTUNE/thunder.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3") }
-    "6"  = @{ Name = "Howling Wind";       Emoji = "💨";  Tracks = @("$NOCTUNE/wind.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3") }
-    "7"  = @{ Name = "Campfire";           Emoji = "🏕️";  Tracks = @("$NOCTUNE/campfire.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3") }
-    "8"  = @{ Name = "Train Journey";      Emoji = "🚂";  Tracks = @("$NOCTUNE/train.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3") }
-    "9"  = @{ Name = "Café Chatter";       Emoji = "☕";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-2.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3") }
-    "10" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-5.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3") }
-    "11" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3") }
+    "1"  = @{ Name = "Heavy Rain";         Emoji = "🌧️";  Tracks = @("$NOCTUNE/rain.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
+    "2"  = @{ Name = "Forest Wind";        Emoji = "🌲";  Tracks = @("$NOCTUNE/forest.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "http://us4.internet-radio.com:8256/stream") }
+    "3"  = @{ Name = "Flowing River";       Emoji = "🌊";  Tracks = @("$NOCTUNE/river.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "http://uk1.internet-radio.com:8294/stream") }
+    "4"  = @{ Name = "Singing Birds";      Emoji = "🐦";  Tracks = @("$NOCTUNE/night.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3", "http://us2.internet-radio.com:8012/stream") }
+    "5"  = @{ Name = "Thunder Storm";      Emoji = "⛈️";  Tracks = @("$NOCTUNE/thunder.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
+    "6"  = @{ Name = "Howling Wind";       Emoji = "💨";  Tracks = @("$NOCTUNE/wind.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "http://us1.internet-radio.com:8108/stream") }
+    "7"  = @{ Name = "Campfire";           Emoji = "🏕️";  Tracks = @("$NOCTUNE/campfire.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "http://us3.internet-radio.com:8408/stream") }
+    "8"  = @{ Name = "Train Journey";      Emoji = "🚂";  Tracks = @("$NOCTUNE/train.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/096t61gh32zuv") }
+    "9"  = @{ Name = "Café Chatter";       Emoji = "☕";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-2.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "https://stream.zeno.fm/6szg7vzv32zuv") }
+    "10" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-5.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
+    "11" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/cg1t3u6h32zuv") }
     "12" = @{ Name = "White Noise Loop";   Emoji = "📻";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3") }
-    "13" = @{ Name = "Claude FM";          Emoji = "🤖";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3") }
+    "13" = @{ Name = "Claude FM";          Emoji = "🤖";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
     "14" = @{ Name = "Lofi Radio Live";   Emoji = "📡";  Tracks = @("https://streams.fluxfm.de/Chillhop/mp3-128/") }
 }
 
@@ -102,16 +102,29 @@ while ($running) {
                 $statusColor = "Cyan"
             }
             
-            $trackNum = ($currentTrackIdx[$key] + 1).ToString().PadLeft(2, '0')
-            $trackTotal = $ch.Tracks.Count.ToString().PadLeft(2, '0')
+            $idx = $currentTrackIdx[$key]
+            $totalCount = $ch.Tracks.Count
+            $infoText = ""
             
+            if ($key -eq "12" -or $key -eq "14") {
+                $infoText = "SYS_LINK // 24/7_STREAM    "
+            }
+            elseif ($idx -eq ($totalCount - 1)) {
+                $infoText = "SYS_LINK // 24/7_RADIO_LIVE"
+            }
+            else {
+                $trackNum = ($idx + 1).ToString().PadLeft(2, '0')
+                $trackTotal = ($totalCount - 1).ToString().PadLeft(2, '0')
+                $infoText = "TRACK_LINK // SYS_${trackNum}_${trackTotal} "
+            }
+
             $volPct = $channelVolumes[$key]
             $barCount = [int]($volPct / 10)
             $progressBar = ("=" * $barCount) + ("-" * (10 - $barCount))
             
             # Print row with alignment
             Write-Host "    [$($key.PadLeft(2))] $($ch.Emoji) $($ch.Name.PadRight(18)) " -NoNewline -ForegroundColor White
-            Write-Host "TRACK_LINK // SYS_${trackNum}_${trackTotal} " -NoNewline -ForegroundColor DarkCyan
+            Write-Host "$infoText " -NoNewline -ForegroundColor DarkCyan
             Write-Host "[$progressBar] " -NoNewline -ForegroundColor Gray
             Write-Host "$($volPct.ToString().PadLeft(3))% " -NoNewline -ForegroundColor Gray
             Write-Host "[$status]" -ForegroundColor $statusColor

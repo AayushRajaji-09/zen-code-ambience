@@ -637,6 +637,25 @@
         <audio id="audio-claudefm" loop preload="none"></audio>
       </div>
 
+      <div class="channel-card" id="card-lofiradio">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">📡</span>
+            <span class="channel-name">Lofi Radio Live</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn play-btn" onclick="togglePlay('lofiradio')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-lofiradio" min="0" max="100" value="45" oninput="changeVolume('lofiradio', this.value)">
+          <span class="vol-label" id="vol-lofiradio">45%</span>
+        </div>
+        <div class="track-info" id="track-lofiradio">SYS_LINK // 24/7_STREAM</div>
+        <audio id="audio-lofiradio" loop preload="none"></audio>
+      </div>
+
       <div class="channel-card" id="card-whitenoise">
         <div class="channel-info">
           <div class="channel-meta">
@@ -683,13 +702,14 @@
       lofi:      [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-5.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
       piano:     [`${SOUNDHELIX}/SoundHelix-Song-3.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`],
       claudefm:  [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`],
+      lofiradio: [`https://streams.fluxfm.de/Chillhop/mp3-128/`],
     };
 
     // Track the current track index per channel
     const currentTrackIndex = {};
     Object.keys(trackLibrary).forEach(id => { currentTrackIndex[id] = 0; });
 
-    const channels = ['rain', 'forest', 'river', 'birds', 'thunder', 'wind', 'campfire', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'whitenoise'];
+    const channels = ['rain', 'forest', 'river', 'birds', 'thunder', 'wind', 'campfire', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'lofiradio', 'whitenoise'];
 
     let masterVolume = 80;
 
@@ -806,6 +826,9 @@
       const targetVol = (slider.value / 100) * (masterVolume / 100);
 
       if (audio.paused) {
+        if (id === 'lofiradio') {
+          audio.src = trackLibrary[id][0];
+        }
         audio.volume = 0;
         audio.play().then(() => {
           card.classList.add('active');
@@ -815,6 +838,10 @@
       } else {
         fadeVolume(audio, audio.volume, 0, 300, () => {
           audio.pause();
+          if (id === 'lofiradio') {
+            audio.removeAttribute('src');
+            audio.load();
+          }
           card.classList.remove('active');
           btn.textContent = '▶';
         });

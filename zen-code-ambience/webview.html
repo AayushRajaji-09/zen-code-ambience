@@ -108,6 +108,17 @@
       color: white;
       box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
     }
+    #reverb-btn.active {
+      background: rgba(0, 242, 254, 0.12);
+      border-color: #00f2fe;
+      color: #00f2fe;
+      box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+    }
+    #reverb-btn.active:hover {
+      background: rgba(0, 242, 254, 0.25);
+      color: #00f2fe;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.5);
+    }
 
     /* ─── Master Volume ─── */
     .master-volume {
@@ -336,6 +347,7 @@
   <div class="header">
     <span class="title">🧘 Zen Ambience</span>
     <div class="header-actions">
+      <button class="master-btn" id="reverb-btn" onclick="toggleReverb()" style="border-color: rgba(0, 242, 254, 0.3); color: var(--accent-light);">📡 RECIPROCATING FM: OFF</button>
       <button class="master-btn" id="stop-all-btn" onclick="stopAll()">⏹ Mute All</button>
     </div>
   </div>
@@ -829,6 +841,7 @@
         if (id === 'lofiradio') {
           audio.src = trackLibrary[id][0];
         }
+        routeAudioSource(id);
         audio.volume = 0;
         audio.play().then(() => {
           card.classList.add('active');
@@ -918,6 +931,83 @@
       body.classList.toggle('hidden');
       header.classList.toggle('collapsed');
     }
+
+    // ─── Web Audio Reverb/Echo Feedback Loop (Reciprocating FM) ───
+    let audioCtx = null;
+    const audioSources = {};
+    let delayNode = null;
+    let feedbackNode = null;
+    let wetGainNode = null;
+    let dryGainNode = null;
+    let reverbEnabled = false;
+
+    function initWebAudio() {
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      delayNode = audioCtx.createDelay(1.0);
+      delayNode.delayTime.value = 0.35; // 350ms delay
+      
+      feedbackNode = audioCtx.createGain();
+      feedbackNode.gain.value = 0.45; // 45% feedback
+      
+      wetGainNode = audioCtx.createGain();
+      wetGainNode.gain.value = 0.0;
+      
+      dryGainNode = audioCtx.createGain();
+      dryGainNode.gain.value = 1.0;
+      
+      delayNode.connect(feedbackNode);
+      feedbackNode.connect(delayNode);
+      delayNode.connect(wetGainNode);
+      
+      dryGainNode.connect(audioCtx.destination);
+      wetGainNode.connect(audioCtx.destination);
+    }
+
+    function routeAudioSource(id) {
+      if (id === 'whitenoise') return;
+      const audio = document.getElementById(`audio-${id}`);
+      if (!audio) return;
+      
+      initWebAudio();
+      
+      if (!audioSources[id]) {
+        try {
+          const source = audioCtx.createMediaElementSource(audio);
+          source.connect(dryGainNode);
+          source.connect(delayNode);
+          audioSources[id] = source;
+        } catch (e) {
+          console.error('Web Audio routing error:', e);
+        }
+      }
+    }
+
+    function toggleReverb() {
+      initWebAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      
+      reverbEnabled = !reverbEnabled;
+      const btn = document.getElementById('reverb-btn');
+      
+      if (reverbEnabled) {
+        wetGainNode.gain.setTargetAtTime(0.55, audioCtx.currentTime, 0.1);
+        btn.classList.add('active');
+        btn.textContent = '📡 RECIPROCATING FM: ACTIVE';
+      } else {
+        wetGainNode.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.1);
+        btn.classList.remove('active');
+        btn.textContent = '📡 RECIPROCATING FM: OFF';
+      }
+    }
+
+    // Programmatically enable CORS to allow Web Audio API processing
+    document.querySelectorAll('audio').forEach(audio => {
+      audio.setAttribute('crossorigin', 'anonymous');
+    });
   </script>
 </body>
 </html>

@@ -12,7 +12,8 @@ Four ways to run it. Pick the one that fits your setup.
 | **Chrome Extension** | Chrome / Edge / Brave | 30 seconds | Windows / macOS / Linux / ChromeOS |
 | **Antigravity Extension** | Antigravity IDE | Already installed | Windows / macOS / Linux |
 | **CLI (PowerShell)** | PowerShell 7+ | 1 minute | Windows |
-| **CLI (zsh)** | zsh + mpv | 1 minute | macOS / Linux |
+| **macOS App** | macOS + mpv | 1 minute | macOS |
+| **CLI (zsh)** | zsh + mpv | 1 minute | Linux |
 
 ---
 
@@ -145,36 +146,65 @@ Then restart Antigravity.
 
 ---
 
-## Method 5 — CLI (zsh + mpv)
+## Method 5 — macOS Native App
 
 **Dependencies:**
-- **zsh** — default shell on macOS, installable on Linux
+- **macOS** 11 (Big Sur) or later
 - **mpv** — [Download](https://mpv.io/installation/)
-  - macOS: `brew install mpv`
-  - Ubuntu/Debian: `sudo apt install mpv`
-  - Arch: `sudo pacman -S mpv`
+  ```bash
+  brew install mpv
+  ```
 
-### Steps
+### Option A — Double-click (simplest)
 
 1. Clone the repo:
    ```bash
    git clone https://github.com/AayushRajaji-09/zen-code-ambience.git
-   cd zen-code-ambience
    ```
 
-2. Make the script executable:
+2. Open Finder, navigate to the repo folder.
+
+3. Double-click **`zen-ambiator-macos.command`**.
+
+   Terminal opens with the Zen Ambience interface.
+
+4. *(Optional)* Drag `zen-ambiator-macos.command` to the **Dock** for one-click access.
+
+### Option B — App Bundle (Dock + Spotlight)
+
+The `zen-ambiator-macos.app` bundle can be placed in your Applications folder.
+
+1. **Copy to Applications:**
    ```bash
-   chmod +x zen-ambiator.zsh
+   cp -r zen-ambiator-macos.app /Applications/Zen\ Ambience.app
    ```
 
-3. Run:
-   ```bash
-   ./zen-ambiator.zsh
-   ```
+2. **Launch from Spotlight:** Press `Cmd+Space`, type "Zen Ambience", press Enter.
+
+3. **Launch from Dock:** Drag `/Applications/Zen Ambience.app` to the Dock.
+
+4. *(First launch only)* macOS may show "unidentified developer" warning:
+   - Go to **System Settings → Privacy & Security**
+   - Scroll down — click **Open Anyway** next to "Zen Ambience"
+   - Or run once from Terminal:
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/Zen\ Ambience.app
+     ```
 
 ### Controls
 
-Same as the PowerShell version: number keys toggle channels, `s` skips, `v` sets volume, `mv` master volume, `m` mute, `q` quit.
+| Command | Action |
+|---|---|
+| `1`–`9` | Toggle play/pause for a channel |
+| `s1`–`s9` | Skip to next track |
+| `mv70` | Set master volume (0–100) |
+| `m` | Mute all |
+| `q` | Quit |
+
+### macOS-specific features
+- **Track change notifications** — macOS notification centre shows the current track when you skip.
+- **Touch Bar support** — works automatically if your Mac has a Touch Bar (Terminal app controls).
+- **Low resource usage** — mpv uses minimal CPU/battery compared to a browser tab.
 
 ---
 
@@ -233,7 +263,9 @@ repo root
 │   ├── extension.js               ← Extension logic
 │   └── package.json
 ├── zen-ambiator.ps1               ← PowerShell CLI player
-├── zen-ambiator.zsh               ← zsh/mpv CLI player
+├── zen-ambiator.zsh               ← zsh/mpv CLI player (Linux)
+├── zen-ambiator-macos.command     ← macOS double-clickable player
+├── zen-ambiator-macos.app/        ← macOS app bundle (Dock/Spotlight)
 └── INSTALL.md                     ← This file
 ```
 

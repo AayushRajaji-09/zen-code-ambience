@@ -7,6 +7,8 @@
 !zen-code-ambience/
 !zen-ambiator.ps1
 !zen-ambiator.zsh
+!zen-ambiator-macos.command
+!zen-ambiator-macos.app/
 !docs/
 !extension/
 !INSTALL.md

@@ -1,0 +1,24 @@
+#!/bin/bash
+# Zen Ambience — macOS App Launcher
+# This script locates and runs the .command file from the repo.
+
+SCRIPT_DIR="$(cd "$(dirname "$0")/../../.." && pwd)"
+COMMAND_FILE="$SCRIPT_DIR/zen-ambiator-macos.command"
+
+if [ -f "$COMMAND_FILE" ]; then
+  chmod +x "$COMMAND_FILE"
+  open "$COMMAND_FILE"
+else
+  # Fallback: look in common locations
+  for dir in "$HOME/Desktop/opencodebase" "$HOME/zen-code-ambience" "$HOME/Documents/zen-code-ambience"; do
+    if [ -f "$dir/zen-ambiator-macos.command" ]; then
+      chmod +x "$dir/zen-ambiator-macos.command"
+      open "$dir/zen-ambiator-macos.command"
+      exit 0
+    fi
+  done
+  echo "Cannot find zen-ambiator-macos.command"
+  echo "Please clone the repo first:"
+  echo "  git clone https://github.com/AayushRajaji-09/zen-code-ambience.git"
+  read -r -p "Press Enter to quit..."
+fi

@@ -5,30 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zen Ambience Mixer</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
     :root {
-      --bg-dark: #07080b;
-      --bg-card: rgba(18, 20, 29, 0.6);
-      --bg-card-active: rgba(26, 29, 43, 0.85);
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-active: rgba(99, 102, 241, 0.35);
-      --text-primary: #e5e7eb;
-      --text-secondary: #9ca3af;
-      --text-muted: #6b7280;
-      --accent-color: #6366f1;
-      --accent-light: #818cf8;
-      --accent-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-      --nature-color: #22c55e;
-      --weather-color: #3b82f6;
-      --cozy-color: #f59e0b;
-      --music-color: #ec4899;
+      --bg-dark: #03050a;
+      --bg-card: rgba(6, 12, 22, 0.7);
+      --bg-card-active: rgba(8, 24, 40, 0.85);
+      --border-color: rgba(0, 242, 254, 0.15);
+      --border-active: #00f2fe;
+      --text-primary: #e2f1ff;
+      --text-secondary: #00f2fe;
+      --text-muted: #4e6b8c;
+      --accent-color: #00f2fe;
+      --accent-light: #70faff;
+      --accent-grad: linear-gradient(135deg, #00f2fe 0%, #a855f7 100%);
+      
+      --nature-color: #00ff66;
+      --weather-color: #0099ff;
+      --cozy-color: #ff9900;
+      --music-color: #ff00ff;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-dark);
+      background-image: 
+        linear-gradient(rgba(0, 242, 254, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 254, 0.02) 1px, transparent 1px);
+      background-size: 15px 15px;
       color: var(--text-primary);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Share Tech Mono', monospace;
       padding: 0.75rem;
       display: flex;
       flex-direction: column;
@@ -38,10 +45,10 @@
     }
 
     /* Scrollbar styling */
-    body::-webkit-scrollbar { width: 4px; }
+    body::-webkit-scrollbar { width: 3px; }
     body::-webkit-scrollbar-track { background: transparent; }
-    body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
-    body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+    body::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.2); }
+    body::-webkit-scrollbar-thumb:hover { background: rgba(0, 242, 254, 0.4); }
 
     /* ─── Header ─── */
     .header {
@@ -54,28 +61,53 @@
     }
 
     .title {
-      font-size: 0.95rem;
-      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
       background: var(--accent-grad);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .title::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #00f2fe;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00f2fe;
+      animation: pulse-dot 1.5s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
     }
 
     .header-actions { display: flex; gap: 0.4rem; align-items: center; }
 
     .master-btn {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(239, 68, 68, 0.08);
       border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #ef4444;
+      color: #ff5c5c;
       padding: 3px 8px;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
+      font-family: 'Share Tech Mono', monospace;
       font-weight: 600;
-      border-radius: 6px;
+      border-radius: 0;
       cursor: pointer;
+      text-transform: uppercase;
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
       transition: all 0.2s;
     }
-    .master-btn:hover { background: #ef4444; color: white; }
+    .master-btn:hover {
+      background: #ef4444;
+      color: white;
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+    }
 
     /* ─── Master Volume ─── */
     .master-volume {
@@ -83,20 +115,20 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
-      padding: 0.5rem 0.65rem;
-      background: rgba(99, 102, 241, 0.08);
-      border: 1px solid rgba(99, 102, 241, 0.15);
-      border-radius: 10px;
+      padding: 0.4rem 0.6rem;
+      background: rgba(0, 242, 254, 0.02);
+      border: 1px solid rgba(0, 242, 254, 0.1);
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
     }
     .master-volume-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 600;
       color: var(--accent-light);
-      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     .master-volume .slider { flex-grow: 1; }
-    .master-volume .vol-label { font-size: 0.7rem; color: var(--accent-light); font-family: monospace; width: 28px; text-align: right; }
-
+    .master-volume .vol-label { font-size: 0.68rem; color: var(--accent-light); font-family: 'Share Tech Mono', monospace; width: 28px; text-align: right; }
 
     /* ─── Category Section ─── */
     .category-section { margin-bottom: 0.6rem; }
@@ -106,32 +138,35 @@
       gap: 0.4rem;
       margin-bottom: 0.4rem;
       cursor: pointer;
-      padding: 0.25rem 0;
+      padding: 0.35rem 0.5rem;
+      background: rgba(0, 242, 254, 0.02);
+      border-left: 2px solid var(--accent-color);
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
     }
-    .category-emoji { font-size: 0.8rem; }
+    .category-emoji { font-size: 0.75rem; filter: saturate(1.2); }
     .category-name {
-      font-size: 0.7rem;
-      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
     }
-    .category-name.nature { color: var(--nature-color); }
-    .category-name.weather { color: var(--weather-color); }
-    .category-name.cozy { color: var(--cozy-color); }
-    .category-name.music { color: var(--music-color); }
+    .category-name.nature { color: var(--nature-color); text-shadow: 0 0 4px rgba(0,255,102,0.2); }
+    .category-name.weather { color: var(--weather-color); text-shadow: 0 0 4px rgba(0,153,255,0.2); }
+    .category-name.cozy { color: var(--cozy-color); text-shadow: 0 0 4px rgba(255,153,0,0.2); }
+    .category-name.music { color: var(--music-color); text-shadow: 0 0 4px rgba(255,0,255,0.2); }
 
     .category-line {
       flex-grow: 1;
       height: 1px;
-      border-radius: 1px;
     }
-    .category-line.nature { background: linear-gradient(90deg, var(--nature-color) 0%, transparent 100%); }
-    .category-line.weather { background: linear-gradient(90deg, var(--weather-color) 0%, transparent 100%); }
-    .category-line.cozy { background: linear-gradient(90deg, var(--cozy-color) 0%, transparent 100%); }
-    .category-line.music { background: linear-gradient(90deg, var(--music-color) 0%, transparent 100%); }
+    .category-line.nature { background: linear-gradient(90deg, rgba(0,255,102,0.15) 0%, transparent 100%); }
+    .category-line.weather { background: linear-gradient(90deg, rgba(0,153,255,0.15) 0%, transparent 100%); }
+    .category-line.cozy { background: linear-gradient(90deg, rgba(255,153,0,0.15) 0%, transparent 100%); }
+    .category-line.music { background: linear-gradient(90deg, rgba(255,0,255,0.15) 0%, transparent 100%); }
 
     .category-toggle {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       color: var(--text-muted);
       transition: transform 0.2s;
     }
@@ -143,90 +178,97 @@
     .channel-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 0.55rem 0.65rem;
+      padding: 0.5rem 0.6rem;
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
-      transition: all 0.25s ease;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+      transition: all 0.2s ease;
     }
     .channel-card.active {
       background: var(--bg-card-active);
       border-color: var(--border-active);
-      box-shadow: 0 2px 12px rgba(99, 102, 241, 0.1);
-      animation: pulse-border 2s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.15);
+      animation: pulse-border 2.5s ease-in-out infinite;
     }
     @keyframes pulse-border {
-      0%, 100% { border-color: var(--border-active); }
-      50% { border-color: rgba(99, 102, 241, 0.55); }
+      0%, 100% { border-color: var(--border-color); }
+      50% { border-color: var(--border-active); }
     }
 
     .channel-info { display: flex; align-items: center; justify-content: space-between; }
-    .channel-meta { display: flex; align-items: center; gap: 0.5rem; }
-    .channel-emoji { font-size: 1rem; }
-    .channel-name { font-size: 0.78rem; font-weight: 600; }
+    .channel-meta { display: flex; align-items: center; gap: 0.4rem; }
+    .channel-emoji { font-size: 0.85rem; }
+    .channel-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
 
     .channel-actions { display: flex; align-items: center; gap: 0.3rem; }
 
     .action-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
+      background: rgba(0, 242, 254, 0.05);
+      border: 1px solid rgba(0, 242, 254, 0.2);
       color: var(--text-primary);
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       transition: all 0.2s;
     }
-    .action-btn:hover { background: rgba(255, 255, 255, 0.15); }
-    .action-btn.play-btn { width: 26px; height: 26px; font-size: 0.7rem; }
+    .action-btn:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--accent-color);
+    }
+    .action-btn.play-btn { width: 24px; height: 24px; font-size: 0.65rem; }
 
     .channel-card.active .play-btn {
       background: var(--accent-color);
       border-color: var(--accent-color);
-      color: white;
-      box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+      color: #03050a;
+      box-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
     }
 
-    .skip-btn { font-size: 0.55rem; }
+    .skip-btn { font-size: 0.5rem; }
     .skip-btn:hover { color: var(--accent-light); }
 
     .control-row { display: flex; align-items: center; gap: 0.5rem; }
 
     .slider {
       flex-grow: 1;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
+      height: 2px;
+      background: rgba(0, 242, 254, 0.1);
       outline: none;
       -webkit-appearance: none;
       cursor: pointer;
     }
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 10px;
+      width: 5px;
       height: 10px;
-      border-radius: 50%;
-      background: var(--text-secondary);
+      background: var(--text-muted);
+      border-radius: 0;
       transition: background 0.15s;
     }
     .channel-card.active .slider::-webkit-slider-thumb {
       background: var(--accent-color);
-      box-shadow: 0 0 5px var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-color);
     }
     .master-volume .slider::-webkit-slider-thumb {
       background: var(--accent-color);
-      box-shadow: 0 0 5px var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-color);
     }
 
     .vol-label {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--text-secondary);
-      font-family: monospace;
+      font-family: 'Share Tech Mono', monospace;
       width: 22px;
       text-align: right;
     }
@@ -236,8 +278,8 @@
       display: flex;
       align-items: flex-end;
       gap: 1.5px;
-      height: 10px;
-      width: 16px;
+      height: 8px;
+      width: 14px;
       opacity: 0;
       transition: opacity 0.2s ease;
     }
@@ -245,7 +287,6 @@
     .eq-bar {
       width: 2px;
       background-color: var(--accent-color);
-      border-radius: 1px;
       animation: bounce 0.8s ease-in-out infinite alternate;
     }
     .eq-bar:nth-child(1) { height: 100%; animation-delay: -0.2s; }
@@ -259,20 +300,20 @@
 
     /* ─── Track Info ─── */
     .track-info {
-      font-size: 0.55rem;
+      font-size: 0.58rem;
       color: var(--text-muted);
-      font-style: italic;
-      padding-left: 1.5rem;
+      padding-left: 1.2rem;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      opacity: 0;
+      opacity: 0.4;
       max-height: 0;
       transition: all 0.2s;
     }
     .channel-card.active .track-info {
       opacity: 1;
       max-height: 1.2rem;
+      color: var(--accent-light);
     }
 
     /* ─── Footer ─── */
@@ -285,6 +326,7 @@
     .footer-text {
       font-size: 0.55rem;
       color: var(--text-muted);
+      letter-spacing: 0.05em;
     }
   </style>
 </head>
@@ -331,7 +373,7 @@
           <input type="range" class="slider" id="slider-rain" min="0" max="100" value="60" oninput="changeVolume('rain', this.value)">
           <span class="vol-label" id="vol-rain">60%</span>
         </div>
-        <div class="track-info" id="track-rain">Track 1/4</div>
+        <div class="track-info" id="track-rain">TRACK_LINK // SYS_01_04</div>
         <audio id="audio-rain" loop preload="none"></audio>
       </div>
 
@@ -351,7 +393,7 @@
           <input type="range" class="slider" id="slider-forest" min="0" max="100" value="40" oninput="changeVolume('forest', this.value)">
           <span class="vol-label" id="vol-forest">40%</span>
         </div>
-        <div class="track-info" id="track-forest">Track 1/4</div>
+        <div class="track-info" id="track-forest">TRACK_LINK // SYS_01_04</div>
         <audio id="audio-forest" loop preload="none"></audio>
       </div>
 
@@ -371,7 +413,7 @@
           <input type="range" class="slider" id="slider-river" min="0" max="100" value="40" oninput="changeVolume('river', this.value)">
           <span class="vol-label" id="vol-river">40%</span>
         </div>
-        <div class="track-info" id="track-river">Track 1/4</div>
+        <div class="track-info" id="track-river">TRACK_LINK // SYS_01_04</div>
         <audio id="audio-river" loop preload="none"></audio>
       </div>
 
@@ -391,7 +433,7 @@
           <input type="range" class="slider" id="slider-birds" min="0" max="100" value="35" oninput="changeVolume('birds', this.value)">
           <span class="vol-label" id="vol-birds">35%</span>
         </div>
-        <div class="track-info" id="track-birds">Track 1/3</div>
+        <div class="track-info" id="track-birds">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-birds" loop preload="none"></audio>
       </div>
 
@@ -424,7 +466,7 @@
           <input type="range" class="slider" id="slider-thunder" min="0" max="100" value="45" oninput="changeVolume('thunder', this.value)">
           <span class="vol-label" id="vol-thunder">45%</span>
         </div>
-        <div class="track-info" id="track-thunder">Track 1/3</div>
+        <div class="track-info" id="track-thunder">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-thunder" loop preload="none"></audio>
       </div>
 
@@ -444,7 +486,7 @@
           <input type="range" class="slider" id="slider-wind" min="0" max="100" value="35" oninput="changeVolume('wind', this.value)">
           <span class="vol-label" id="vol-wind">35%</span>
         </div>
-        <div class="track-info" id="track-wind">Track 1/3</div>
+        <div class="track-info" id="track-wind">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-wind" loop preload="none"></audio>
       </div>
 
@@ -477,7 +519,7 @@
           <input type="range" class="slider" id="slider-campfire" min="0" max="100" value="50" oninput="changeVolume('campfire', this.value)">
           <span class="vol-label" id="vol-campfire">50%</span>
         </div>
-        <div class="track-info" id="track-campfire">Track 1/3</div>
+        <div class="track-info" id="track-campfire">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-campfire" loop preload="none"></audio>
       </div>
 
@@ -497,7 +539,7 @@
           <input type="range" class="slider" id="slider-train" min="0" max="100" value="50" oninput="changeVolume('train', this.value)">
           <span class="vol-label" id="vol-train">50%</span>
         </div>
-        <div class="track-info" id="track-train">Track 1/3</div>
+        <div class="track-info" id="track-train">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-train" loop preload="none"></audio>
       </div>
 
@@ -517,7 +559,7 @@
           <input type="range" class="slider" id="slider-cafe" min="0" max="100" value="45" oninput="changeVolume('cafe', this.value)">
           <span class="vol-label" id="vol-cafe">45%</span>
         </div>
-        <div class="track-info" id="track-cafe">Track 1/4</div>
+        <div class="track-info" id="track-cafe">TRACK_LINK // SYS_01_04</div>
         <audio id="audio-cafe" loop preload="none"></audio>
       </div>
 
@@ -550,7 +592,7 @@
           <input type="range" class="slider" id="slider-lofi" min="0" max="100" value="40" oninput="changeVolume('lofi', this.value)">
           <span class="vol-label" id="vol-lofi">40%</span>
         </div>
-        <div class="track-info" id="track-lofi">Track 1/5</div>
+        <div class="track-info" id="track-lofi">TRACK_LINK // SYS_01_05</div>
         <audio id="audio-lofi" loop preload="none"></audio>
       </div>
 
@@ -570,7 +612,7 @@
           <input type="range" class="slider" id="slider-piano" min="0" max="100" value="40" oninput="changeVolume('piano', this.value)">
           <span class="vol-label" id="vol-piano">40%</span>
         </div>
-        <div class="track-info" id="track-piano">Track 1/5</div>
+        <div class="track-info" id="track-piano">TRACK_LINK // SYS_01_05</div>
         <audio id="audio-piano" loop preload="none"></audio>
 
       </div>
@@ -590,7 +632,7 @@
           <input type="range" class="slider" id="slider-whitenoise" min="0" max="100" value="25" oninput="changeVolume('whitenoise', this.value)">
           <span class="vol-label" id="vol-whitenoise">25%</span>
         </div>
-        <div class="track-info" id="track-whitenoise">Procedural</div>
+        <div class="track-info" id="track-whitenoise">SYS_LINK // PROCEDURAL</div>
       </div>
 
     </div>
@@ -598,7 +640,7 @@
 
   <!-- Footer -->
   <div class="footer">
-    <span class="footer-text">Zen Ambience v2.0 · Mix your perfect soundscape</span>
+    <span class="footer-text">ZEN_AMBIATOR // OS_HUD_V2.1</span>
   </div>
 
   <script>
@@ -663,7 +705,11 @@
       const idx = currentTrackIndex[id];
       audio.src = tracks[idx];
       const trackInfoEl = document.getElementById(`track-${id}`);
-      if (trackInfoEl) trackInfoEl.textContent = `Track ${idx + 1}/${tracks.length}`;
+      if (trackInfoEl) {
+        const cur = String(idx + 1).padStart(2, '0');
+        const tot = String(tracks.length).padStart(2, '0');
+        trackInfoEl.textContent = `TRACK_LINK // SYS_${cur}_${tot}`;
+      }
     }
 
     // Initialize all audio sources

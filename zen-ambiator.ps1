@@ -24,6 +24,7 @@ $trackLibrary = @{
     "10" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-5.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3") }
     "11" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3") }
     "12" = @{ Name = "White Noise Loop";   Emoji = "📻";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3") }
+    "13" = @{ Name = "Claude FM";          Emoji = "🤖";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3") }
 }
 
 # ─── Player State initialization ───
@@ -86,7 +87,7 @@ while ($running) {
         @{ Header = "🌿 Nature";  Keys = @("1", "2", "3", "4") },
         @{ Header = "⚡ Weather"; Keys = @("5", "6") },
         @{ Header = "🔥 Cozy";    Keys = @("7", "8", "9") },
-        @{ Header = "🎵 Music";   Keys = @("10", "11", "12") }
+        @{ Header = "🎵 Music";   Keys = @("10", "11", "13", "12") }
     )
 
     foreach ($cat in $categories) {

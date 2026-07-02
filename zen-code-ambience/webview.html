@@ -617,6 +617,26 @@
 
       </div>
 
+      <div class="channel-card" id="card-claudefm">
+        <div class="channel-info">
+          <div class="channel-meta">
+            <span class="channel-emoji">🤖</span>
+            <span class="channel-name">Claude FM</span>
+            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+          </div>
+          <div class="channel-actions">
+            <button class="action-btn skip-btn" onclick="skipTrack('claudefm')" title="Next track">⏭</button>
+            <button class="action-btn play-btn" onclick="togglePlay('claudefm')">▶</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <input type="range" class="slider" id="slider-claudefm" min="0" max="100" value="45" oninput="changeVolume('claudefm', this.value)">
+          <span class="vol-label" id="vol-claudefm">45%</span>
+        </div>
+        <div class="track-info" id="track-claudefm">TRACK_LINK // SYS_01_03</div>
+        <audio id="audio-claudefm" loop preload="none"></audio>
+      </div>
+
       <div class="channel-card" id="card-whitenoise">
         <div class="channel-info">
           <div class="channel-meta">
@@ -662,13 +682,14 @@
       cafe:      [`${SOUNDHELIX}/SoundHelix-Song-2.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`],
       lofi:      [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-5.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
       piano:     [`${SOUNDHELIX}/SoundHelix-Song-3.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`],
+      claudefm:  [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`],
     };
 
     // Track the current track index per channel
     const currentTrackIndex = {};
     Object.keys(trackLibrary).forEach(id => { currentTrackIndex[id] = 0; });
 
-    const channels = ['rain', 'forest', 'river', 'birds', 'thunder', 'wind', 'campfire', 'train', 'cafe', 'lofi', 'piano', 'whitenoise'];
+    const channels = ['rain', 'forest', 'river', 'birds', 'thunder', 'wind', 'campfire', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'whitenoise'];
 
     let masterVolume = 80;
 

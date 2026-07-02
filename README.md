@@ -29,5 +29,26 @@ By mixing natural sounds, rain, and instrumental music, you can design the optim
 
 This repository contains the configuration and tools for the **Zen Code Ambience** extension:
 - `zen-code-ambience/` — Extension source code.
+- `zen-ambiator.ps1` — Standalone, interactive PowerShell CLI version of the mixer.
 - `.agents/` & `.opencode/` — Development configuration and agent templates.
 - `opencode.json` — Workspace skill manifest.
+
+---
+
+## 💻 CLI Version (`zen-ambiator.ps1`)
+
+If you want to use the mixer directly from your terminal (outside the IDE), run:
+```powershell
+./zen-ambiator.ps1
+```
+
+### CLI Features:
+- Fully interactive console HUD with high-tech ASCII art.
+- Monospace progress bars displaying channel volumes.
+- Toggle channels, skip tracks, and adjust master/channel volumes with simple commands:
+  - `[Num]` (e.g. `1`, `2`) — Toggle play/pause for a channel.
+  - `s [Num]` (e.g. `s 1`) — Skip track.
+  - `v [Num] [Val]` (e.g. `v 1 80`) — Set channel volume (0-100%).
+  - `mv [Val]` (e.g. `mv 70`) — Set master gain volume.
+  - `m` — Mute all.
+  - `q` — Quit.

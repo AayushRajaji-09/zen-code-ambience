@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Zen Ambience",
+  "version": "1.0.0",
+  "description": "Ambient soundscapes — rain, thunder, lofi, white noise & more",
+  "permissions": ["sidePanel"],
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Zen Ambience",
+    "default_icon": {
+      "192": "icons/icon-192.png",
+      "512": "icons/icon-512.png"
+    }
+  },
+  "icons": {
+    "192": "icons/icon-192.png",
+    "512": "icons/icon-512.png"
+  }
+}

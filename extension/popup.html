@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zen Ambience</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --bg-active: rgba(0,242,254,0.08);
+      --surface: rgba(255,255,255,0.05);
+      --surface-hover: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.06);
+      --text: #f5f5f7;
+      --text-secondary: rgba(255,255,255,0.55);
+      --text-tertiary: rgba(255,255,255,0.3);
+      --accent: #00f2fe;
+      --accent-dim: rgba(0,242,254,0.25);
+      --radius: 8px;
+      --bar-height: 48px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::-webkit-scrollbar { width: 4px; }
+    body::-webkit-scrollbar-track { background: transparent; }
+    body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .header {
+      padding: 14px 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .header-actions { display: flex; gap: 6px; align-items: center; }
+    .icon-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: none;
+      background: var(--surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover { background: var(--surface-hover); color: var(--text); }
+    .icon-btn.active { background: var(--bg-active); color: var(--accent); }
+
+    .channel-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0 80px;
+    }
+
+    .category { margin-bottom: 2px; }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px 6px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .category-header:hover { color: var(--text); }
+    .category-header .arrow {
+      font-size: 8px;
+      transition: transform 0.2s;
+      color: var(--text-tertiary);
+      margin-left: auto;
+    }
+    .category-header.collapsed .arrow { transform: rotate(-90deg); }
+    .category-body.hidden { display: none; }
+
+    .channel-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      margin: 0 8px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .channel-card:hover { background: var(--surface); }
+    .channel-card.active { background: var(--bg-active); }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .card-info { display: flex; flex-direction: column; min-width: 0; }
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .channel-card.active .card-name { color: var(--accent); }
+    .card-meta {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1px;
+    }
+    .badge {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .badge.radio { background: rgba(0,242,254,0.12); color: var(--accent); }
+    .badge.gen { background: rgba(255,255,255,0.06); color: var(--text-tertiary); }
+    .badge.live { background: rgba(255,69,58,0.12); color: #ff453a; }
+
+    .card-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .play-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .play-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+    .channel-card.active .play-btn {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0f0f12;
+    }
+
+    .skip-btn {
+      background: none; border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 10px;
+      padding: 2px;
+      opacity: 0;
+      transition: all 0.15s;
+    }
+    .channel-card:hover .skip-btn { opacity: 0.6; }
+    .skip-btn:hover { color: var(--accent); opacity: 1 !important; }
+
+    .eq-vis {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+      width: 16px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .channel-card.active .eq-vis { opacity: 1; }
+    .eq-bar {
+      width: 2.5px;
+      border-radius: 1.5px;
+      background: var(--accent);
+      animation: eq-bounce 0.6s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { height: 100%; animation-delay: -0.15s; }
+    .eq-bar:nth-child(2) { height: 55%; animation-delay: -0.4s; }
+    .eq-bar:nth-child(3) { height: 80%; animation-delay: -0.25s; }
+    .eq-bar:nth-child(4) { height: 35%; animation-delay: -0.55s; }
+    .eq-bar:nth-child(5) { height: 65%; animation-delay: -0.35s; }
+
+    @keyframes eq-bounce {
+      0% { transform: scaleY(0.3); }
+      100% { transform: scaleY(1); }
+    }
+
+    .track-label {
+      font-size: 10px;
+      color: var(--accent-dim);
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: none;
+    }
+    .channel-card.active .track-label { display: block; }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bar-height);
+      background: rgba(15,15,18,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      z-index: 100;
+    }
+    .bottom-bar input[type="range"] {
+      flex: 1;
+      height: 3px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      min-width: 60px;
+    }
+    .bottom-bar input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #0f0f12;
+      box-shadow: 0 0 0 1px rgba(0,242,254,0.2);
+      transition: transform 0.15s;
+    }
+    .bottom-bar input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .bottom-bar .vol-pct {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      width: 30px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+    .bottom-bar .bar-btn {
+      background: var(--surface);
+      border: none;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .bottom-bar .bar-btn:hover { background: var(--surface-hover); color: var(--text); }
+    .bottom-bar .bar-btn.mute:hover { background: rgba(255,69,58,0.12); color: #ff453a; }
+
+    .loading-msg {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin-left: 4px;
+      display: none;
+    }
+    .channel-card.active .loading-msg { display: inline; }
+
+    @media (max-width: 500px) {
+      .channel-card { padding: 8px 10px; margin: 0 4px; }
+      .card-left { gap: 8px; }
+      .card-name { font-size: 12px; }
+      .card-meta { font-size: 10px; }
+      .bottom-bar { padding: 0 10px; gap: 6px; }
+      .bottom-bar .bar-btn { padding: 4px 8px; font-size: 10px; }
+      .track-label { max-width: 50px; font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <span class="title">Zen Ambience</span>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="stopAll()" title="Stop all">⊘</button>
+    </div>
+  </div>
+
+  <div class="channel-list">
+
+    <!-- NATURE -->
+    <div class="category">
+      <div class="category-header" onclick="toggleCategory('nature')">
+        Nature <span class="arrow">▼</span>
+      </div>
+      <div class="category-body" id="cat-nature">
+        <div class="channel-card" id="card-rain">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Heavy Rain</span>
+              <span class="card-meta">Ambient <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-rain">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-rain"></span>
+            <button class="skip-btn" id="skip-rain">⏭</button>
+            <button class="play-btn" id="play-rain">▶</button>
+          </div>
+        </div>
+        <audio id="audio-rain" loop preload="none" ></audio>
+      </div>
+    </div>
+
+    <!-- WEATHER -->
+    <div class="category">
+      <div class="category-header" onclick="toggleCategory('weather')">
+        Weather <span class="arrow">▼</span>
+      </div>
+      <div class="category-body" id="cat-weather">
+        <div class="channel-card" id="card-thunder">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Thunder Storm</span>
+              <span class="card-meta">Intense <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-thunder">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-thunder"></span>
+            <button class="skip-btn" id="skip-thunder">⏭</button>
+            <button class="play-btn" id="play-thunder">▶</button>
+          </div>
+        </div>
+        <audio id="audio-thunder" loop preload="none" ></audio>
+      </div>
+    </div>
+
+    <!-- COZY -->
+    <div class="category">
+      <div class="category-header" onclick="toggleCategory('cozy')">
+        Cozy <span class="arrow">▼</span>
+      </div>
+      <div class="category-body" id="cat-cozy">
+        <div class="channel-card" id="card-train">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Train Journey</span>
+              <span class="card-meta">Movement <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-train">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-train"></span>
+            <button class="skip-btn" id="skip-train">⏭</button>
+            <button class="play-btn" id="play-train">▶</button>
+          </div>
+        </div>
+        <div class="channel-card" id="card-cafe">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Cafe Chatter</span>
+              <span class="card-meta">Social <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-cafe">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-cafe"></span>
+            <button class="skip-btn" id="skip-cafe">⏭</button>
+            <button class="play-btn" id="play-cafe">▶</button>
+          </div>
+        </div>
+        <audio id="audio-train" loop preload="none" ></audio>
+        <audio id="audio-cafe" loop preload="none" ></audio>
+      </div>
+    </div>
+
+    <!-- MUSIC -->
+    <div class="category">
+      <div class="category-header" onclick="toggleCategory('music')">
+        Music <span class="arrow">▼</span>
+      </div>
+      <div class="category-body" id="cat-music">
+        <div class="channel-card" id="card-lofi">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Lofi Focus</span>
+              <span class="card-meta">Study <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-lofi">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-lofi"></span>
+            <button class="skip-btn" id="skip-lofi">⏭</button>
+            <button class="play-btn" id="play-lofi">▶</button>
+          </div>
+        </div>
+        <div class="channel-card" id="card-piano">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Deep Focus Piano</span>
+              <span class="card-meta">Instrumental <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-piano">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-piano"></span>
+            <button class="skip-btn" id="skip-piano">⏭</button>
+            <button class="play-btn" id="play-piano">▶</button>
+          </div>
+        </div>
+        <div class="channel-card" id="card-claudefm">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Claude FM</span>
+              <span class="card-meta">Synth <span class="badge radio">Radio</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-claudefm">TRACK 01</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-claudefm"></span>
+            <button class="skip-btn" id="skip-claudefm">⏭</button>
+            <button class="play-btn" id="play-claudefm">▶</button>
+          </div>
+        </div>
+        <div class="channel-card" id="card-lofiradio">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">Lofi Radio Live</span>
+              <span class="card-meta">24/7 <span class="badge live">LIVE</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-lofiradio">LIVE</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-lofiradio"></span>
+            <button class="play-btn" id="play-lofiradio">▶</button>
+          </div>
+        </div>
+        <div class="channel-card" id="card-whitenoise">
+          <div class="card-left">
+            <div class="card-info">
+              <span class="card-name">White Noise</span>
+              <span class="card-meta">Focus <span class="badge gen">Generated</span></span>
+            </div>
+          </div>
+          <div class="card-right">
+            <span class="track-label" id="track-whitenoise">PROCEDURAL</span>
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="loading-msg" id="load-whitenoise"></span>
+            <button class="play-btn" id="play-whitenoise">▶</button>
+          </div>
+        </div>
+        <audio id="audio-lofi" loop preload="none" ></audio>
+        <audio id="audio-piano" loop preload="none" ></audio>
+        <audio id="audio-claudefm" loop preload="none" ></audio>
+        <audio id="audio-lofiradio" loop preload="none" ></audio>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar">
+    <span style="font-size:11px;color:var(--text-secondary);flex-shrink:0;">Vol</span>
+    <input type="range" id="master-slider" min="0" max="100" value="80">
+    <span class="vol-pct" id="master-vol">80%</span>
+    <button class="bar-btn mute" id="mute-all-btn">Mute</button>
+  </div>
+
+  <script>
+    const NOCTUNE = 'https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds';
+    const SOUNDHELIX = 'https://www.soundhelix.com/examples/mp3';
+
+    // Dead Zeno.fm streams removed — replaced with working SoundHelix tracks
+    const trackLibrary = {
+      rain:      [`${NOCTUNE}/rain.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-12.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`],
+      thunder:   [`${NOCTUNE}/thunder.mp3`, `${SOUNDHELIX}/SoundHelix-Song-11.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`],
+      train:     [`${NOCTUNE}/train.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`],
+      cafe:      [`${SOUNDHELIX}/SoundHelix-Song-2.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`],
+      lofi:      [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-5.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
+      piano:     [`${SOUNDHELIX}/SoundHelix-Song-3.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`],
+      claudefm:  [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`],
+      lofiradio: [`https://streams.fluxfm.de/Chillhop/mp3-128/`],
+    };
+
+    // White noise generator (procedural, no URL)
+    let whiteNoiseCtx = null;
+    let whiteNoiseNode = null;
+    let whiteNoiseGain = null;
+    let whiteNoisePlaying = false;
+
+    const channels = ['rain', 'thunder', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'lofiradio', 'whitenoise'];
+    const currentTrackIndex = {};
+    channels.forEach(id => { currentTrackIndex[id] = 0; });
+
+    let masterVolume = 80;
+
+    // Initialise track labels
+    function updateTrackLabel(id) {
+      const el = document.getElementById(`track-${id}`);
+      if (!el) return;
+      if (id === 'whitenoise') { el.textContent = 'PROCEDURAL'; return; }
+      if (id === 'lofiradio') { el.textContent = 'LIVE'; return; }
+      const tracks = trackLibrary[id];
+      const idx = currentTrackIndex[id];
+      el.textContent = `TRACK ${String(idx + 1).padStart(2, '0')}`;
+    }
+    channels.forEach(id => updateTrackLabel(id));
+
+    function getAudio(id) {
+      if (id === 'whitenoise') return null;
+      return document.getElementById(`audio-${id}`);
+    }
+
+    function showLoading(id, msg) {
+      const el = document.getElementById(`load-${id}`);
+      if (el) el.textContent = msg || '';
+    }
+
+    // Play / pause
+    function togglePlay(id) {
+      const card = document.getElementById(`card-${id}`);
+      const btn = document.getElementById(`play-${id}`);
+
+      // White noise special handling
+      if (id === 'whitenoise') {
+        if (!whiteNoisePlaying) {
+          if (!whiteNoiseCtx) {
+            whiteNoiseCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const bufSize = 2 * whiteNoiseCtx.sampleRate;
+            const buf = whiteNoiseCtx.createBuffer(1, bufSize, whiteNoiseCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+            whiteNoiseNode = whiteNoiseCtx.createBufferSource();
+            whiteNoiseNode.buffer = buf;
+            whiteNoiseNode.loop = true;
+            whiteNoiseGain = whiteNoiseCtx.createGain();
+            whiteNoiseGain.gain.value = masterVolume / 100;
+            whiteNoiseNode.connect(whiteNoiseGain);
+            whiteNoiseGain.connect(whiteNoiseCtx.destination);
+          }
+          if (whiteNoiseCtx.state === 'suspended') whiteNoiseCtx.resume();
+          whiteNoiseNode.start(0);
+          whiteNoisePlaying = true;
+          card.classList.add('active');
+          btn.textContent = '⏸';
+        } else {
+          whiteNoiseNode.stop();
+          if (whiteNoiseCtx) { whiteNoiseCtx.close(); whiteNoiseCtx = null; whiteNoiseNode = null; whiteNoiseGain = null; }
+          whiteNoisePlaying = false;
+          card.classList.remove('active');
+          btn.textContent = '▶';
+        }
+        return;
+      }
+
+      const audio = getAudio(id);
+      if (!audio) return;
+
+      if (audio.paused) {
+        const tracks = trackLibrary[id];
+        const idx = currentTrackIndex[id];
+        audio.src = tracks[idx];
+        audio.volume = masterVolume / 100;
+        showLoading(id, 'Loading...');
+        audio.play().then(() => {
+          card.classList.add('active');
+          btn.textContent = '⏸';
+          showLoading(id, '');
+        }).catch(err => {
+          showLoading(id, 'Failed');
+          console.error(`Playback error [${id}]:`, err);
+        });
+      } else {
+        audio.pause();
+        card.classList.remove('active');
+        btn.textContent = '▶';
+        showLoading(id, '');
+      }
+    }
+
+    // Skip to next track
+    function skipTrack(id) {
+      if (id === 'whitenoise' || id === 'lofiradio') return;
+      const tracks = trackLibrary[id];
+      if (!tracks || tracks.length <= 1) return;
+      const audio = getAudio(id);
+      if (!audio) return;
+      const wasPlaying = !audio.paused;
+      currentTrackIndex[id] = (currentTrackIndex[id] + 1) % tracks.length;
+      updateTrackLabel(id);
+      if (wasPlaying) {
+        audio.src = tracks[currentTrackIndex[id]];
+        audio.volume = masterVolume / 100;
+        audio.play().catch(err => console.error(`Skip error [${id}]:`, err));
+      }
+    }
+
+    // Master volume
+    function changeMasterVolume(val) {
+      masterVolume = parseInt(val);
+      document.getElementById('master-vol').textContent = `${val}%`;
+      channels.forEach(id => {
+        if (id === 'whitenoise') {
+          if (whiteNoiseGain) whiteNoiseGain.gain.value = masterVolume / 100;
+          return;
+        }
+        const audio = getAudio(id);
+        if (audio && !audio.paused) audio.volume = masterVolume / 100;
+      });
+    }
+
+    // Stop all
+    function stopAll() {
+      channels.forEach(id => {
+        const btn = document.getElementById(`play-${id}`);
+        const card = document.getElementById(`card-${id}`);
+        if (id === 'whitenoise') {
+          if (whiteNoisePlaying) {
+            whiteNoiseNode.stop();
+            if (whiteNoiseCtx) { whiteNoiseCtx.close(); whiteNoiseCtx = null; whiteNoiseNode = null; whiteNoiseGain = null; }
+            whiteNoisePlaying = false;
+          }
+          card.classList.remove('active');
+          if (btn) btn.textContent = '▶';
+          return;
+        }
+        const audio = getAudio(id);
+        if (audio) { audio.pause(); audio.removeAttribute('src'); audio.load(); }
+        card.classList.remove('active');
+        if (btn) btn.textContent = '▶';
+        showLoading(id, '');
+      });
+    }
+
+    // Category collapse
+    function toggleCategory(cat) {
+      const body = document.getElementById(`cat-${cat}`);
+      const header = body.previousElementSibling;
+      body.classList.toggle('hidden');
+      header.classList.toggle('collapsed');
+    }
+
+    // Wire up event listeners (no inline onclick for cleaner code)
+    document.addEventListener('DOMContentLoaded', () => {
+      // Master volume slider
+      document.getElementById('master-slider').addEventListener('input', function() {
+        changeMasterVolume(this.value);
+      });
+
+      // Mute all button
+      document.getElementById('mute-all-btn').addEventListener('click', stopAll);
+
+      // Channel cards — click to play/pause
+      channels.forEach(id => {
+        const card = document.getElementById(`card-${id}`);
+        if (!card) return;
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.skip-btn')) return;
+          if (e.target.closest('.play-btn')) return;
+          togglePlay(id);
+        });
+
+        const playBtn = document.getElementById(`play-${id}`);
+        if (playBtn) {
+          playBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePlay(id);
+          });
+        }
+
+        const skipBtn = document.getElementById(`skip-${id}`);
+        if (skipBtn) {
+          skipBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            skipTrack(id);
+          });
+        }
+      });
+    });
+
+    // Handle audio errors — auto-skip to next track
+    document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
+      audio.addEventListener('error', (e) => {
+        const id = audio.id.replace('audio-', '');
+        console.warn(`Audio error on ${id}:`, e);
+        showLoading(id, 'Error');
+        // Auto-skip on error after a short delay
+        setTimeout(() => {
+          if (!audio.paused) {
+            skipTrack(id);
+            if (!audio.paused) audio.play().catch(() => {});
+          }
+          showLoading(id, '');
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
+

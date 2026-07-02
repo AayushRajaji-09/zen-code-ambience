@@ -1,6 +1,17 @@
 # Zen Code Ambience 🧘
 
-A premium, highly-customizable sidebar sound mixer extension for your IDE designed to help you focus, relax, and code in peace.
+Ambient soundscapes for focus — rain, thunder, train, cafe chatter, lofi, piano, white noise & more.
+
+## Quick Access
+
+| Method | How |
+|---|---|
+| **Browser (any device)** | Visit [aayushrajaji-09.github.io/zen-code-ambience](https://aayushrajaji-09.github.io/zen-code-ambience/) — works instantly. Install as PWA on mobile/desktop. |
+| **Chrome Extension** | Load `extension/` folder in `chrome://extensions` (Developer Mode) or [submit to Chrome Web Store](). Side panel support included. |
+| **IDE Extension** | Install `aayush.zen-code-ambience-1.0.0` from the Antigravity marketplace. |
+| **Terminal (CLI)** | Run `./zen-ambiator.ps1` (PowerShell) or `./zen-ambiator.zsh` (zsh/mpv). |
+
+---
 
 ## Features
 
@@ -25,13 +36,37 @@ By mixing natural sounds, rain, and instrumental music, you can design the optim
 ---
 
 
-## Workspace Setup
+## Project Structure
 
-This repository contains the configuration and tools for the **Zen Code Ambience** extension:
-- `zen-code-ambience/` — Extension source code.
-- `zen-ambiator.ps1` — Standalone, interactive PowerShell CLI version of the mixer.
-- `.agents/` & `.opencode/` — Development configuration and agent templates.
-- `opencode.json` — Workspace skill manifest.
+```
+zen-code-ambience/webview.html     ← Antigravity extension (main product)
+zen-ambiator.ps1 / .zsh            ← CLI players
+docs/                              ← GitHub Pages site (PWA)
+  ├── index.html                   ← same webview + PWA manifest
+  ├── manifest.json                ← PWA install manifest
+  ├── sw.js                        ← service worker (offline cache)
+  └── icons/                       ← app icons
+extension/                         ← Chrome extension
+  ├── manifest.json                ← Manifest V3
+  ├── popup.html                   ← popup / side panel
+  └── icons/
+```
+
+---
+
+## 🌐 Enable GitHub Pages (one-time)
+
+1. Go to repo **Settings → Pages**
+2. Source: **Deploy from a branch**
+3. Branch: `main`, folder: `/docs`
+4. Save. The site is live at `https://aayushrajaji-09.github.io/zen-code-ambience/` within 2 minutes.
+
+## 🧩 Load Chrome Extension (developer mode)
+
+1. Open `chrome://extensions`
+2. Enable **Developer mode** (top-right toggle)
+3. Click **Load unpacked** → select the `extension/` folder
+4. Pin the extension to the toolbar. Click to open, or right-click → "Open side panel" for persistent playback.
 
 ---
 

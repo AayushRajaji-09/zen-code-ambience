@@ -1,0 +1,61 @@
+{
+  "name": "zen-ambience",
+  "displayName": "Zen Ambience",
+  "description": "Ambient soundscapes for focus — rain, thunder, lofi, piano, white noise & more",
+  "version": "1.0.0",
+  "publisher": "aayushrajaji",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Audio",
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "ambient",
+    "sound",
+    "focus",
+    "lofi",
+    "rain",
+    "white noise",
+    "productivity"
+  ],
+  "icon": "media/icon-192.png",
+  "activationEvents": [
+    "onView:zenAmbience.sidebar",
+    "onCommand:zenAmbience.open"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zen-ambience",
+          "title": "Zen Ambience",
+          "icon": "media/icon-192.png"
+        }
+      ]
+    },
+    "views": {
+      "zen-ambience": [
+        {
+          "type": "webview",
+          "id": "zenAmbience.sidebar",
+          "name": "Sound Mixer"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "zenAmbience.open",
+        "title": "Zen Ambience: Open in Editor"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AayushRajaji-09/zen-code-ambience.git"
+  }
+}

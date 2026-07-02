@@ -1,6 +1,6 @@
 # Zen Ambience — Installation Guide
 
-Four ways to run it. Pick the one that fits your setup.
+Five ways to run it. Pick the one that fits your setup.
 
 ---
 
@@ -9,6 +9,7 @@ Four ways to run it. Pick the one that fits your setup.
 | Method | Dependencies | Install Time | Platform |
 |---|---|---|---|
 | **PWA (Browser)** | None — just a browser | 10 seconds | Windows / macOS / Linux / Android / iOS |
+| **VS Code Extension** | VS Code | 30 seconds | macOS / Windows / Linux |
 | **Chrome Extension** | Chrome / Edge / Brave | 30 seconds | Windows / macOS / Linux / ChromeOS |
 | **Antigravity Extension** | Antigravity IDE | Already installed | Windows / macOS / Linux |
 | **CLI (PowerShell)** | PowerShell 7+ | 1 minute | Windows |
@@ -38,7 +39,58 @@ Four ways to run it. Pick the one that fits your setup.
 
 ---
 
-## Method 2 — Chrome Extension
+## Method 2 — VS Code Extension
+
+**Dependencies:** [VS Code](https://code.visualstudio.com/) 1.85+ (macOS / Windows / Linux).
+
+### Option A — Install from VS Code (recommended)
+
+1. Open VS Code.
+2. Go to **Extensions** panel (`Cmd+Shift+X` on Mac, `Ctrl+Shift+X` on Windows/Linux).
+3. Search for **"Zen Ambience"**.
+4. Click **Install**.
+5. Click the headphone icon  in the activity bar (left sidebar) → click "Sound Mixer".
+
+### Option B — Install from VSIX (offline / air-gapped)
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/AayushRajaji-09/zen-code-ambience.git
+   ```
+
+2. Package the extension (requires `vsce`):
+   ```bash
+   npm install -g @vscode/vsce
+   cd vscode-extension
+   vsce package
+   ```
+
+3. Install the generated `.vsix`:
+   ```bash
+   code --install-extension zen-ambience-1.0.0.vsix
+   ```
+
+### Option C — Load unpacked (development)
+
+1. Clone the repo.
+2. Open VS Code → **Extensions** panel (`Cmd+Shift+X`).
+3. Click `...` (top-right) → **Install from VSIX...** → select `vscode-extension/` folder.
+   *Or:* Copy the `vscode-extension/` folder to `~/.vscode/extensions/zen-ambience/` and restart VS Code.
+
+### Usage
+
+| Action | How |
+|---|---|
+| **Open sidebar** | Click the headphone icon  in the left activity bar |
+| **Open in editor** | `Cmd+Shift+P` → "Zen Ambience: Open in Editor" |
+| **Volume** | Bottom bar slider |
+| **Mute all** | Bottom bar "Mute" button |
+
+The sidebar stays open while you code. Audio continues playing when switching tabs or files. On macOS, VS Code's audio is independent of system alerts — no interruptions.
+
+---
+
+## Method 3 — Chrome Extension
 
 **Dependencies:** Google Chrome, Microsoft Edge, Brave, or any Chromium-based browser (version 114+ for side panel).
 
@@ -75,7 +127,7 @@ The side panel keeps Zen Ambience open while you browse other tabs. Audio contin
 
 ---
 
-## Method 3 — Antigravity IDE Extension
+## Method 4 — Antigravity IDE Extension
 
 **Dependencies:** Antigravity IDE (code editor).
 
@@ -108,7 +160,7 @@ Then restart Antigravity.
 
 ---
 
-## Method 4 — CLI (PowerShell)
+## Method 5 — CLI (PowerShell)
 
 **Dependencies:**
 - **PowerShell 7+** — [Download](https://github.com/PowerShell/PowerShell/releases)
@@ -146,7 +198,7 @@ Then restart Antigravity.
 
 ---
 
-## Method 5 — macOS Native App
+## Method 6 — macOS Native App
 
 **Dependencies:**
 - **macOS** 11 (Big Sur) or later
@@ -266,6 +318,10 @@ repo root
 ├── zen-ambiator.zsh               ← zsh/mpv CLI player (Linux)
 ├── zen-ambiator-macos.command     ← macOS double-clickable player
 ├── zen-ambiator-macos.app/        ← macOS app bundle (Dock/Spotlight)
+├── vscode-extension/              ← VS Code extension
+│   ├── package.json
+│   ├── extension.js
+│   └── media/                     ← Icons
 └── INSTALL.md                     ← This file
 ```
 

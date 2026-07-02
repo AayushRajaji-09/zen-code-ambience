@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zen Ambience Mixer</title>
+    <title>Zen Ambience Mixer v2.1</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
@@ -249,8 +249,6 @@
     .skip-btn { font-size: 0.5rem; }
     .skip-btn:hover { color: var(--accent-light); }
 
-    .control-row { display: flex; align-items: center; gap: 0.5rem; }
-
     .slider {
       flex-grow: 1;
       height: 2px;
@@ -266,10 +264,6 @@
       background: var(--text-muted);
       border-radius: 0;
       transition: background 0.15s;
-    }
-    .channel-card.active .slider::-webkit-slider-thumb {
-      background: var(--accent-color);
-      box-shadow: 0 0 6px var(--accent-color);
     }
     .master-volume .slider::-webkit-slider-thumb {
       background: var(--accent-color);
@@ -381,74 +375,11 @@
             <button class="action-btn play-btn" onclick="togglePlay('rain')">▶</button>
           </div>
         </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-rain" min="0" max="100" value="60" oninput="changeVolume('rain', this.value)">
-          <span class="vol-label" id="vol-rain">60%</span>
-        </div>
         <div class="track-info" id="track-rain">TRACK_LINK // SYS_01_04</div>
         <audio id="audio-rain" loop preload="none"></audio>
       </div>
 
-      <div class="channel-card" id="card-forest">
-        <div class="channel-info">
-          <div class="channel-meta">
-            <span class="channel-emoji">🌲</span>
-            <span class="channel-name">Forest Wind</span>
-            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-          </div>
-          <div class="channel-actions">
-            <button class="action-btn skip-btn" onclick="skipTrack('forest')" title="Next track">⏭</button>
-            <button class="action-btn play-btn" onclick="togglePlay('forest')">▶</button>
-          </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-forest" min="0" max="100" value="40" oninput="changeVolume('forest', this.value)">
-          <span class="vol-label" id="vol-forest">40%</span>
-        </div>
-        <div class="track-info" id="track-forest">TRACK_LINK // SYS_01_04</div>
-        <audio id="audio-forest" loop preload="none"></audio>
       </div>
-
-      <div class="channel-card" id="card-river">
-        <div class="channel-info">
-          <div class="channel-meta">
-            <span class="channel-emoji">🌊</span>
-            <span class="channel-name">Flowing River</span>
-            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-          </div>
-          <div class="channel-actions">
-            <button class="action-btn skip-btn" onclick="skipTrack('river')" title="Next track">⏭</button>
-            <button class="action-btn play-btn" onclick="togglePlay('river')">▶</button>
-          </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-river" min="0" max="100" value="40" oninput="changeVolume('river', this.value)">
-          <span class="vol-label" id="vol-river">40%</span>
-        </div>
-        <div class="track-info" id="track-river">TRACK_LINK // SYS_01_04</div>
-        <audio id="audio-river" loop preload="none"></audio>
-      </div>
-
-      <div class="channel-card" id="card-birds">
-        <div class="channel-info">
-          <div class="channel-meta">
-            <span class="channel-emoji">🐦</span>
-            <span class="channel-name">Singing Birds</span>
-            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-          </div>
-          <div class="channel-actions">
-            <button class="action-btn skip-btn" onclick="skipTrack('birds')" title="Next track">⏭</button>
-            <button class="action-btn play-btn" onclick="togglePlay('birds')">▶</button>
-          </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-birds" min="0" max="100" value="35" oninput="changeVolume('birds', this.value)">
-          <span class="vol-label" id="vol-birds">35%</span>
-        </div>
-        <div class="track-info" id="track-birds">TRACK_LINK // SYS_01_03</div>
-        <audio id="audio-birds" loop preload="none"></audio>
-      </div>
-
     </div>
   </div>
 
@@ -474,34 +405,10 @@
             <button class="action-btn play-btn" onclick="togglePlay('thunder')">▶</button>
           </div>
         </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-thunder" min="0" max="100" value="45" oninput="changeVolume('thunder', this.value)">
-          <span class="vol-label" id="vol-thunder">45%</span>
-        </div>
         <div class="track-info" id="track-thunder">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-thunder" loop preload="none"></audio>
-      </div>
 
-      <div class="channel-card" id="card-wind">
-        <div class="channel-info">
-          <div class="channel-meta">
-            <span class="channel-emoji">💨</span>
-            <span class="channel-name">Howling Wind</span>
-            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-          </div>
-          <div class="channel-actions">
-            <button class="action-btn skip-btn" onclick="skipTrack('wind')" title="Next track">⏭</button>
-            <button class="action-btn play-btn" onclick="togglePlay('wind')">▶</button>
-          </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-wind" min="0" max="100" value="35" oninput="changeVolume('wind', this.value)">
-          <span class="vol-label" id="vol-wind">35%</span>
-        </div>
-        <div class="track-info" id="track-wind">TRACK_LINK // SYS_01_03</div>
-        <audio id="audio-wind" loop preload="none"></audio>
       </div>
-
     </div>
   </div>
 
@@ -514,27 +421,6 @@
       <span class="category-toggle">▼</span>
     </div>
     <div class="category-body" id="cat-cozy">
-
-      <div class="channel-card" id="card-campfire">
-        <div class="channel-info">
-          <div class="channel-meta">
-            <span class="channel-emoji">🏕️</span>
-            <span class="channel-name">Campfire</span>
-            <div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-          </div>
-          <div class="channel-actions">
-            <button class="action-btn skip-btn" onclick="skipTrack('campfire')" title="Next track">⏭</button>
-            <button class="action-btn play-btn" onclick="togglePlay('campfire')">▶</button>
-          </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-campfire" min="0" max="100" value="50" oninput="changeVolume('campfire', this.value)">
-          <span class="vol-label" id="vol-campfire">50%</span>
-        </div>
-        <div class="track-info" id="track-campfire">TRACK_LINK // SYS_01_03</div>
-        <audio id="audio-campfire" loop preload="none"></audio>
-      </div>
-
       <div class="channel-card" id="card-train">
         <div class="channel-info">
           <div class="channel-meta">
@@ -546,10 +432,6 @@
             <button class="action-btn skip-btn" onclick="skipTrack('train')" title="Next track">⏭</button>
             <button class="action-btn play-btn" onclick="togglePlay('train')">▶</button>
           </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-train" min="0" max="100" value="50" oninput="changeVolume('train', this.value)">
-          <span class="vol-label" id="vol-train">50%</span>
         </div>
         <div class="track-info" id="track-train">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-train" loop preload="none"></audio>
@@ -566,10 +448,6 @@
             <button class="action-btn skip-btn" onclick="skipTrack('cafe')" title="Next track">⏭</button>
             <button class="action-btn play-btn" onclick="togglePlay('cafe')">▶</button>
           </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-cafe" min="0" max="100" value="45" oninput="changeVolume('cafe', this.value)">
-          <span class="vol-label" id="vol-cafe">45%</span>
         </div>
         <div class="track-info" id="track-cafe">TRACK_LINK // SYS_01_04</div>
         <audio id="audio-cafe" loop preload="none"></audio>
@@ -600,10 +478,6 @@
             <button class="action-btn play-btn" onclick="togglePlay('lofi')">▶</button>
           </div>
         </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-lofi" min="0" max="100" value="40" oninput="changeVolume('lofi', this.value)">
-          <span class="vol-label" id="vol-lofi">40%</span>
-        </div>
         <div class="track-info" id="track-lofi">TRACK_LINK // SYS_01_05</div>
         <audio id="audio-lofi" loop preload="none"></audio>
       </div>
@@ -619,10 +493,6 @@
             <button class="action-btn skip-btn" onclick="skipTrack('piano')" title="Next track">⏭</button>
             <button class="action-btn play-btn" onclick="togglePlay('piano')">▶</button>
           </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-piano" min="0" max="100" value="40" oninput="changeVolume('piano', this.value)">
-          <span class="vol-label" id="vol-piano">40%</span>
         </div>
         <div class="track-info" id="track-piano">TRACK_LINK // SYS_01_05</div>
         <audio id="audio-piano" loop preload="none"></audio>
@@ -641,10 +511,6 @@
             <button class="action-btn play-btn" onclick="togglePlay('claudefm')">▶</button>
           </div>
         </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-claudefm" min="0" max="100" value="45" oninput="changeVolume('claudefm', this.value)">
-          <span class="vol-label" id="vol-claudefm">45%</span>
-        </div>
         <div class="track-info" id="track-claudefm">TRACK_LINK // SYS_01_03</div>
         <audio id="audio-claudefm" loop preload="none"></audio>
       </div>
@@ -660,10 +526,6 @@
             <button class="action-btn play-btn" onclick="togglePlay('lofiradio')">▶</button>
           </div>
         </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-lofiradio" min="0" max="100" value="45" oninput="changeVolume('lofiradio', this.value)">
-          <span class="vol-label" id="vol-lofiradio">45%</span>
-        </div>
         <div class="track-info" id="track-lofiradio">SYS_LINK // 24/7_STREAM</div>
         <audio id="audio-lofiradio" loop preload="none"></audio>
       </div>
@@ -678,10 +540,6 @@
           <div class="channel-actions">
             <button class="action-btn play-btn" onclick="togglePlay('whitenoise')">▶</button>
           </div>
-        </div>
-        <div class="control-row">
-          <input type="range" class="slider" id="slider-whitenoise" min="0" max="100" value="25" oninput="changeVolume('whitenoise', this.value)">
-          <span class="vol-label" id="vol-whitenoise">25%</span>
         </div>
         <div class="track-info" id="track-whitenoise">SYS_LINK // PROCEDURAL</div>
       </div>
@@ -703,12 +561,7 @@
 
     const trackLibrary = {
       rain:      [`${NOCTUNE}/rain.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-12.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `https://stream.zeno.fm/f3t72887vxhvv`],
-      forest:    [`${NOCTUNE}/forest.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `http://us4.internet-radio.com:8256/stream`],
-      river:     [`${NOCTUNE}/river.mp3`, `${SOUNDHELIX}/SoundHelix-Song-11.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `http://uk1.internet-radio.com:8294/stream`],
-      birds:     [`${NOCTUNE}/night.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`, `http://us2.internet-radio.com:8012/stream`],
       thunder:   [`${NOCTUNE}/thunder.mp3`, `${SOUNDHELIX}/SoundHelix-Song-11.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `https://stream.zeno.fm/f3t72887vxhvv`],
-      wind:      [`${NOCTUNE}/wind.mp3`, `${SOUNDHELIX}/SoundHelix-Song-12.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `http://us1.internet-radio.com:8108/stream`],
-      campfire:  [`${NOCTUNE}/campfire.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `http://us3.internet-radio.com:8408/stream`],
       train:     [`${NOCTUNE}/train.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `https://stream.zeno.fm/096t61gh32zuv`],
       cafe:      [`${SOUNDHELIX}/SoundHelix-Song-2.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `https://stream.zeno.fm/6szg7vzv32zuv`],
       lofi:      [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-5.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `https://streams.fluxfm.de/Chillhop/mp3-128/`],
@@ -721,7 +574,7 @@
     const currentTrackIndex = {};
     Object.keys(trackLibrary).forEach(id => { currentTrackIndex[id] = 0; });
 
-    const channels = ['rain', 'forest', 'river', 'birds', 'thunder', 'wind', 'campfire', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'lofiradio', 'whitenoise'];
+    const channels = ['rain', 'thunder', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'lofiradio', 'whitenoise'];
 
     let masterVolume = 80;
 
@@ -744,8 +597,7 @@
       whiteNoiseNode.buffer = noiseBuffer;
       whiteNoiseNode.loop = true;
       whiteNoiseGain = whiteNoiseCtx.createGain();
-      const sliderVal = document.getElementById('slider-whitenoise').value;
-      whiteNoiseGain.gain.value = (sliderVal / 100) * (masterVolume / 100);
+      whiteNoiseGain.gain.value = masterVolume / 100;
       whiteNoiseNode.connect(whiteNoiseGain);
       whiteNoiseGain.connect(whiteNoiseCtx.destination);
     }
@@ -787,8 +639,7 @@
       loadTrack(id);
 
       if (wasPlaying) {
-        const slider = document.getElementById(`slider-${id}`);
-        audio.volume = (slider.value / 100) * (masterVolume / 100);
+        audio.volume = masterVolume / 100;
         audio.play().catch(err => console.error('Skip playback error:', err));
       }
     }
@@ -840,8 +691,7 @@
       }
 
       const audio = document.getElementById(`audio-${id}`);
-      const slider = document.getElementById(`slider-${id}`);
-      const targetVol = (slider.value / 100) * (masterVolume / 100);
+      const targetVol = masterVolume / 100;
 
       const idx = currentTrackIndex[id];
       const tracks = trackLibrary[id];
@@ -871,21 +721,6 @@
       }
     }
 
-    // ─── Volume Control ───
-    function changeVolume(id, val) {
-      const label = document.getElementById(`vol-${id}`);
-      label.textContent = `${val}%`;
-
-      if (id === 'whitenoise') {
-        if (whiteNoiseGain) {
-          whiteNoiseGain.gain.value = (val / 100) * (masterVolume / 100);
-        }
-        return;
-      }
-      const audio = document.getElementById(`audio-${id}`);
-      audio.volume = (val / 100) * (masterVolume / 100);
-    }
-
     // ─── Master Volume ───
     function changeMasterVolume(val) {
       masterVolume = parseInt(val);
@@ -894,15 +729,13 @@
       channels.forEach(id => {
         if (id === 'whitenoise') {
           if (whiteNoiseGain) {
-            const sliderVal = document.getElementById('slider-whitenoise').value;
-            whiteNoiseGain.gain.value = (sliderVal / 100) * (masterVolume / 100);
+            whiteNoiseGain.gain.value = masterVolume / 100;
           }
           return;
         }
         const audio = document.getElementById(`audio-${id}`);
-        const slider = document.getElementById(`slider-${id}`);
         if (!audio.paused) {
-          audio.volume = (slider.value / 100) * (masterVolume / 100);
+          audio.volume = masterVolume / 100;
         }
       });
     }

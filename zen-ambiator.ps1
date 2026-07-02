@@ -12,33 +12,28 @@ $NOCTUNE = "https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds"
 $SOUNDHELIX = "https://www.soundhelix.com/examples/mp3"
 
 $trackLibrary = @{
-    "1"  = @{ Name = "Heavy Rain";         Emoji = "🌧️";  Tracks = @("$NOCTUNE/rain.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
-    "2"  = @{ Name = "Forest Wind";        Emoji = "🌲";  Tracks = @("$NOCTUNE/forest.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "http://us4.internet-radio.com:8256/stream") }
-    "3"  = @{ Name = "Flowing River";       Emoji = "🌊";  Tracks = @("$NOCTUNE/river.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "http://uk1.internet-radio.com:8294/stream") }
-    "4"  = @{ Name = "Singing Birds";      Emoji = "🐦";  Tracks = @("$NOCTUNE/night.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3", "http://us2.internet-radio.com:8012/stream") }
-    "5"  = @{ Name = "Thunder Storm";      Emoji = "⛈️";  Tracks = @("$NOCTUNE/thunder.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
-    "6"  = @{ Name = "Howling Wind";       Emoji = "💨";  Tracks = @("$NOCTUNE/wind.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "http://us1.internet-radio.com:8108/stream") }
-    "7"  = @{ Name = "Campfire";           Emoji = "🏕️";  Tracks = @("$NOCTUNE/campfire.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "http://us3.internet-radio.com:8408/stream") }
-    "8"  = @{ Name = "Train Journey";      Emoji = "🚂";  Tracks = @("$NOCTUNE/train.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/096t61gh32zuv") }
-    "9"  = @{ Name = "Café Chatter";       Emoji = "☕";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-2.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "https://stream.zeno.fm/6szg7vzv32zuv") }
-    "10" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-5.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
-    "11" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/cg1t3u6h32zuv") }
-    "12" = @{ Name = "White Noise Loop";   Emoji = "📻";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3") }
-    "13" = @{ Name = "Claude FM";          Emoji = "🤖";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
-    "14" = @{ Name = "Lofi Radio Live";   Emoji = "📡";  Tracks = @("https://streams.fluxfm.de/Chillhop/mp3-128/") }
+    "1" = @{ Name = "Heavy Rain";         Emoji = "🌧️";  Tracks = @("$NOCTUNE/rain.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
+    "2" = @{ Name = "Thunder Storm";      Emoji = "⛈️";  Tracks = @("$NOCTUNE/thunder.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
+    "3" = @{ Name = "Train Journey";      Emoji = "🚂";  Tracks = @("$NOCTUNE/train.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/096t61gh32zuv") }
+    "4" = @{ Name = "Café Chatter";       Emoji = "☕";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-2.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "https://stream.zeno.fm/6szg7vzv32zuv") }
+    "5" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-5.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
+    "6" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/cg1t3u6h32zuv") }
+    "7" = @{ Name = "Claude FM";          Emoji = "🤖";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
+    "8" = @{ Name = "Lofi Radio Live";    Emoji = "📡";  Tracks = @("https://streams.fluxfm.de/Chillhop/mp3-128/") }
+    "9" = @{ Name = "White Noise";        Emoji = "📻";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3") }
 }
 
 # ─── Player State initialization ───
 $players = @{}
 $currentTrackIdx = @{}
-$channelVolumes = @{} # Local volume scale 0-100
+# $channelVolumes removed in v2.1 — master volume only
 $isPlaying = @{}
 $masterVolume = 80 # Global volume scale 0-100
 
 foreach ($key in $trackLibrary.Keys) {
     $players[$key] = New-Object System.Windows.Media.MediaPlayer
     $currentTrackIdx[$key] = 0
-    $channelVolumes[$key] = 50
+    # $channelVolumes removed in v2.1
     $isPlaying[$key] = $false
     
     # Load initial source
@@ -46,11 +41,10 @@ foreach ($key in $trackLibrary.Keys) {
     $players[$key].Open((New-Object System.Uri($initialUrl)))
 }
 
-# Helper to calculate and set player volume
+# Helper to set player volume (master volume only)
 function Set-PlayerVolume($key) {
     # .NET MediaPlayer volume takes values from 0.0 to 1.0
-    $scaledVolume = ($channelVolumes[$key] / 100) * ($masterVolume / 100)
-    $players[$key].Volume = $scaledVolume
+    $players[$key].Volume = $masterVolume / 100
 }
 
 # Helper to stop all
@@ -85,10 +79,10 @@ while ($running) {
 
     # Print Category sections
     $categories = @(
-        @{ Header = "🌿 Nature";  Keys = @("1", "2", "3", "4") },
-        @{ Header = "⚡ Weather"; Keys = @("5", "6") },
-        @{ Header = "🔥 Cozy";    Keys = @("7", "8", "9") },
-        @{ Header = "🎵 Music";   Keys = @("10", "11", "13", "14", "12") }
+        @{ Header = "🌿 Nature";  Keys = @("1") },
+        @{ Header = "⚡ Weather"; Keys = @("2") },
+        @{ Header = "🔥 Cozy";    Keys = @("3", "4") },
+        @{ Header = "🎵 Music";   Keys = @("5", "6", "7", "8", "9") }
     )
 
     foreach ($cat in $categories) {
@@ -106,7 +100,7 @@ while ($running) {
             $totalCount = $ch.Tracks.Count
             $infoText = ""
             
-            if ($key -eq "12" -or $key -eq "14") {
+            if ($key -eq "8") {
                 $infoText = "SYS_LINK // 24/7_STREAM    "
             }
             elseif ($idx -eq ($totalCount - 1)) {
@@ -118,23 +112,17 @@ while ($running) {
                 $infoText = "TRACK_LINK // SYS_${trackNum}_${trackTotal} "
             }
 
-            $volPct = $channelVolumes[$key]
-            $barCount = [int]($volPct / 10)
-            $progressBar = ("=" * $barCount) + ("-" * (10 - $barCount))
-            
-            # Print row with alignment
+            # Print row with alignment (no progress bars in v2.1)
             Write-Host "    [$($key.PadLeft(2))] $($ch.Emoji) $($ch.Name.PadRight(18)) " -NoNewline -ForegroundColor White
             Write-Host "$infoText " -NoNewline -ForegroundColor DarkCyan
-            Write-Host "[$progressBar] " -NoNewline -ForegroundColor Gray
-            Write-Host "$($volPct.ToString().PadLeft(3))% " -NoNewline -ForegroundColor Gray
             Write-Host "[$status]" -ForegroundColor $statusColor
         }
         Write-Host ""
     }
 
     Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host "  COMMANDS: [Num] Toggle Play  |  s [Num] Skip  |  v [Num] [Val]" -ForegroundColor White
-    Write-Host "            mv [Val] Master    |  m Mute All    |  q Quit" -ForegroundColor White
+    Write-Host "  COMMANDS: [Num] Toggle Play  |  s [Num] Skip  |  mv [Val] Master" -ForegroundColor White
+    Write-Host "            m Mute All          |  q Quit" -ForegroundColor White
     Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
     Write-Host ""
     
@@ -179,16 +167,6 @@ while ($running) {
                     Set-PlayerVolume $targetKey
                     $players[$targetKey].Play()
                 }
-            }
-        }
-    }
-    elseif ($cmd -eq "v") {
-        if ($parts.Length -gt 2) {
-            $targetKey = $parts[1]
-            $newVal = 0
-            if ($trackLibrary.ContainsKey($targetKey) -and [int]::TryParse($parts[2], [ref]$newVal)) {
-                $channelVolumes[$targetKey] = [Math]::Max(0, [Math]::Min(100, $newVal))
-                Set-PlayerVolume $targetKey
             }
         }
     }

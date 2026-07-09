@@ -1,53 +1,46 @@
 # ══════════════════════════════════════════════════════════════════════════════
-#                     ZEN_AMBIATOR // OS_HUD_V2.1 (CLI Mixer)
+#   ZEN AMBIATOR  //  Focus · Flow · Silence   (CLI Mixer v2.2)
 # ══════════════════════════════════════════════════════════════════════════════
-# Run this script in PowerShell to play and mix background ambient sounds directly
-# from your terminal! 
+#   Run in PowerShell to play and mix background ambient sounds from terminal.
 # ══════════════════════════════════════════════════════════════════════════════
 
 Add-Type -AssemblyName PresentationCore
 
-# ─── Configuration & Track Library ───
-$NOCTUNE = "https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds"
+# ─── Track Library ────────────────────────────────────────────────────────────
+$NOCTUNE    = "https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds"
 $SOUNDHELIX = "https://www.soundhelix.com/examples/mp3"
 
 $trackLibrary = @{
-    "1" = @{ Name = "Heavy Rain";         Emoji = "🌧️";  Tracks = @("$NOCTUNE/rain.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
-    "2" = @{ Name = "Thunder Storm";      Emoji = "⛈️";  Tracks = @("$NOCTUNE/thunder.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/f3t72887vxhvv") }
-    "3" = @{ Name = "Train Journey";      Emoji = "🚂";  Tracks = @("$NOCTUNE/train.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://stream.zeno.fm/096t61gh32zuv") }
-    "4" = @{ Name = "Café Chatter";       Emoji = "☕";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-2.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-6.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "https://stream.zeno.fm/6szg7vzv32zuv") }
-    "5" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-5.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
-    "6" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "https://stream.zeno.fm/cg1t3u6h32zuv") }
-    "7" = @{ Name = "Claude FM";          Emoji = "🤖";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3", "$SOUNDHELIX/SoundHelix-Song-4.mp3", "$SOUNDHELIX/SoundHelix-Song-9.mp3", "https://streams.fluxfm.de/Chillhop/mp3-128/") }
-    "8" = @{ Name = "Lofi Radio Live";    Emoji = "📡";  Tracks = @("https://streams.fluxfm.de/Chillhop/mp3-128/") }
-    "9" = @{ Name = "White Noise";        Emoji = "📻";  Tracks = @("$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3") }
+    "1" = @{ Name = "Heavy Rain";         Emoji = "🌧";  Desc = "Deep rainfall, thunderous and still";     Tracks = @("$NOCTUNE/rain.mp3",    "$SOUNDHELIX/SoundHelix-Song-6.mp3",  "$SOUNDHELIX/SoundHelix-Song-12.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3") }
+    "2" = @{ Name = "Thunder Storm";      Emoji = "⛈";   Desc = "Electric skies, raw and alive";           Tracks = @("$NOCTUNE/thunder.mp3", "$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "$SOUNDHELIX/SoundHelix-Song-7.mp3") }
+    "3" = @{ Name = "Train Journey";      Emoji = "🚂";  Desc = "Rolling tracks, wandering thoughts";      Tracks = @("$NOCTUNE/train.mp3",   "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3", "$SOUNDHELIX/SoundHelix-Song-10.mp3") }
+    "4" = @{ Name = "Cafe Chatter";       Emoji = "☕";  Desc = "Warm murmurs, coffee and keystrokes";     Tracks = @("$SOUNDHELIX/SoundHelix-Song-2.mp3",  "$SOUNDHELIX/SoundHelix-Song-4.mp3",  "$SOUNDHELIX/SoundHelix-Song-6.mp3",  "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-13.mp3") }
+    "5" = @{ Name = "Lofi Focus";         Emoji = "🎧";  Desc = "Mellow beats for deep work";              Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3",  "$SOUNDHELIX/SoundHelix-Song-5.mp3",  "$SOUNDHELIX/SoundHelix-Song-9.mp3",  "$SOUNDHELIX/SoundHelix-Song-13.mp3", "$SOUNDHELIX/SoundHelix-Song-15.mp3") }
+    "6" = @{ Name = "Deep Focus Piano";   Emoji = "🎹";  Desc = "Cinematic keys, unhurried and pure";      Tracks = @("$SOUNDHELIX/SoundHelix-Song-3.mp3",  "$SOUNDHELIX/SoundHelix-Song-7.mp3",  "$SOUNDHELIX/SoundHelix-Song-10.mp3", "$SOUNDHELIX/SoundHelix-Song-14.mp3", "$SOUNDHELIX/SoundHelix-Song-16.mp3", "$SOUNDHELIX/SoundHelix-Song-8.mp3") }
+    "7" = @{ Name = "Claude FM";          Emoji = "🤖";  Desc = "AI-curated generative soundscape";        Tracks = @("$SOUNDHELIX/SoundHelix-Song-1.mp3",  "$SOUNDHELIX/SoundHelix-Song-4.mp3",  "$SOUNDHELIX/SoundHelix-Song-9.mp3") }
+    "8" = @{ Name = "Lofi Radio Live";    Emoji = "📡";  Desc = "Uninterrupted chillhop, always on";       Tracks = @("https://streams.fluxfm.de/Chillhop/mp3-128/") }
+    "9" = @{ Name = "White Noise";        Emoji = "📻";  Desc = "Procedural static, tuned for focus";      Tracks = @("$SOUNDHELIX/SoundHelix-Song-11.mp3", "$SOUNDHELIX/SoundHelix-Song-12.mp3") }
 }
 
-# ─── Player State initialization ───
-$players = @{}
+# ─── Player State ─────────────────────────────────────────────────────────────
+$players         = @{}
 $currentTrackIdx = @{}
-# $channelVolumes removed in v2.1 — master volume only
-$isPlaying = @{}
-$masterVolume = 80 # Global volume scale 0-100
+$isPlaying       = @{}
+$masterVolume    = 80
 
 foreach ($key in $trackLibrary.Keys) {
-    $players[$key] = New-Object System.Windows.Media.MediaPlayer
+    $players[$key]         = New-Object System.Windows.Media.MediaPlayer
     $currentTrackIdx[$key] = 0
-    # $channelVolumes removed in v2.1
-    $isPlaying[$key] = $false
-    
-    # Load initial source
+    $isPlaying[$key]       = $false
     $initialUrl = $trackLibrary[$key].Tracks[0]
     $players[$key].Open((New-Object System.Uri($initialUrl)))
 }
 
-# Helper to set player volume (master volume only)
+# ─── Helpers ──────────────────────────────────────────────────────────────────
 function Set-PlayerVolume($key) {
-    # .NET MediaPlayer volume takes values from 0.0 to 1.0
     $players[$key].Volume = $masterVolume / 100
 }
 
-# Helper to stop all
 function Stop-All() {
     foreach ($key in $trackLibrary.Keys) {
         $players[$key].Stop()
@@ -55,136 +48,123 @@ function Stop-All() {
     }
 }
 
-# Easter Egg spoken greeting on start
+function Get-VolBar($vol) {
+    $filled = [Math]::Round($vol / 10)
+    $empty  = 10 - $filled
+    $bar    = ("█" * $filled) + ("░" * $empty)
+    return "[$bar] $vol%"
+}
+
+function Get-TrackInfo($key) {
+    $ch    = $trackLibrary[$key]
+    $idx   = $currentTrackIdx[$key]
+    $total = $ch.Tracks.Count
+    if ($key -eq "8") { return "Live Radio Stream  " }
+    if ($idx -eq ($total - 1)) { return "Live · Radio       " }
+    return ("Track " + ($idx + 1) + " of " + ($total - 1)).PadRight(19)
+}
+
+# ─── Easter Egg Greeting ──────────────────────────────────────────────────────
 try {
-    $synthCmd = "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('ZEN AMBIATOR environment initialized. System ready.')"
+    $synthCmd = "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Zen Ambiator initialized. Focus mode ready.')"
     powershell -WindowStyle Hidden -Command $synthCmd
 } catch {}
 
-# ─── Main Interface Loop ───
+# ─── Main Loop ────────────────────────────────────────────────────────────────
 $running = $true
 while ($running) {
     Clear-Host
-    
-    # Draw futuristic ASCII and HUD header
-    Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host "      _____  ______ _   _                 __  __ _____ _    _ _____ " -ForegroundColor Cyan
-    Write-Host "     |__  / |  ____| \ | |   /\   |\/|   |  \/  |_   _\ \  / |  ___|" -ForegroundColor Cyan
-    Write-Host "       / /  | |__  |  \| |  /  \  |  |   | \  / | | |  \ \/ /| |__  " -ForegroundColor Magenta
-    Write-Host "      / /_  |  __| | . ` | / /\ \ |  |   | |\/| | | |   \  / |  __| " -ForegroundColor Magenta
-    Write-Host "     /____| |____|_|\_|_|/_/    \_|  |   |_|  |_|_____|  \/  |____| " -ForegroundColor Purple
-    Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host "  SYS_LINK // OS_HUD_V2.1                     MASTER_GAIN // $masterVolume%" -ForegroundColor DarkCyan
-    Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
 
-    # Print Category sections
+    # Header
+    Write-Host ""
+    Write-Host "  ╔══════════════════════════════════════════════════════════════╗" -ForegroundColor DarkMagenta
+    Write-Host "  ║          Z E N   A M B I A T O R   //   v2.2               ║" -ForegroundColor Magenta
+    Write-Host "  ║          Focus · Flow · Silence                             ║" -ForegroundColor DarkGray
+    Write-Host "  ╚══════════════════════════════════════════════════════════════╝" -ForegroundColor DarkMagenta
+    Write-Host "  Master Volume  $(Get-VolBar $masterVolume)" -ForegroundColor DarkCyan
+    Write-Host ""
+
+    # Categories
     $categories = @(
-        @{ Header = "🌿 Nature";  Keys = @("1") },
-        @{ Header = "⚡ Weather"; Keys = @("2") },
-        @{ Header = "🔥 Cozy";    Keys = @("3", "4") },
-        @{ Header = "🎵 Music";   Keys = @("5", "6", "7", "8", "9") }
+        @{ Header = "🌿  NATURE";   Keys = @("1") },
+        @{ Header = "⛈   WEATHER"; Keys = @("2") },
+        @{ Header = "🔥  COZY";     Keys = @("3", "4") },
+        @{ Header = "🎵  MUSIC";    Keys = @("5", "6", "7", "8", "9") }
     )
 
     foreach ($cat in $categories) {
-        Write-Host "  [ // $($cat.Header) ]" -ForegroundColor Yellow
+        Write-Host ("  ┌─ " + $cat.Header + " " + ("─" * (48 - $cat.Header.Length))) -ForegroundColor Yellow
         foreach ($key in $cat.Keys) {
-            $ch = $trackLibrary[$key]
-            $status = "MUTED"
-            $statusColor = "DarkGray"
-            if ($isPlaying[$key]) {
-                $status = "ACTIVE"
-                $statusColor = "Cyan"
-            }
-            
-            $idx = $currentTrackIdx[$key]
-            $totalCount = $ch.Tracks.Count
-            $infoText = ""
-            
-            if ($key -eq "8") {
-                $infoText = "SYS_LINK // 24/7_STREAM    "
-            }
-            elseif ($idx -eq ($totalCount - 1)) {
-                $infoText = "SYS_LINK // 24/7_RADIO_LIVE"
-            }
-            else {
-                $trackNum = ($idx + 1).ToString().PadLeft(2, '0')
-                $trackTotal = ($totalCount - 1).ToString().PadLeft(2, '0')
-                $infoText = "TRACK_LINK // SYS_${trackNum}_${trackTotal} "
-            }
+            $ch         = $trackLibrary[$key]
+            $trackInfo  = Get-TrackInfo $key
+            $statusIcon = if ($isPlaying[$key]) { "▶ PLAYING" } else { "── idle  " }
+            $statusColor = if ($isPlaying[$key]) { "Cyan" } else { "DarkGray" }
 
-            # Print row with alignment (no progress bars in v2.1)
-            Write-Host "    [$($key.PadLeft(2))] $($ch.Emoji) $($ch.Name.PadRight(18)) " -NoNewline -ForegroundColor White
-            Write-Host "$infoText " -NoNewline -ForegroundColor DarkCyan
-            Write-Host "[$status]" -ForegroundColor $statusColor
+            Write-Host ("  │  [" + $key + "] " + $ch.Emoji + " ") -NoNewline -ForegroundColor DarkGray
+            Write-Host ($ch.Name.PadRight(20)) -NoNewline -ForegroundColor White
+            Write-Host $trackInfo -NoNewline -ForegroundColor DarkCyan
+            Write-Host $statusIcon -ForegroundColor $statusColor
         }
+        Write-Host "  └" -ForegroundColor DarkGray
         Write-Host ""
     }
 
-    Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-    Write-Host "  COMMANDS: [Num] Toggle Play  |  s [Num] Skip  |  mv [Val] Master" -ForegroundColor White
-    Write-Host "            m Mute All          |  q Quit" -ForegroundColor White
-    Write-Host " ══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+    # Commands
+    Write-Host "  ╔══ COMMANDS ══════════════════════════════════════════════════╗" -ForegroundColor DarkGray
+    Write-Host "  ║  [1-9]  Toggle channel play     s [n]  Skip to next track   ║" -ForegroundColor DarkGray
+    Write-Host "  ║  mv [0-100]  Set master volume  m  Pause all   q  Quit      ║" -ForegroundColor DarkGray
+    Write-Host "  ╚══════════════════════════════════════════════════════════════╝" -ForegroundColor DarkGray
     Write-Host ""
-    
-    # Read user input asynchronously or with prompt
-    $input = Read-Host "  ENTER COMMAND "
-    $parts = $input.Trim().Split(" ")
-    $cmd = $parts[0].ToLower()
 
-    if ($cmd -eq "q" -or $cmd -eq "exit") {
-        Stop-All
-        $running = $false
-    }
-    elseif ($cmd -eq "m") {
-        Stop-All
-    }
-    elseif ($cmd -eq "mv") {
-        if ($parts.Length -gt 1) {
-            $newVal = 0
-            if ([int]::TryParse($parts[1], [ref]$newVal)) {
-                $masterVolume = [Math]::Max(0, [Math]::Min(100, $newVal))
-                # Update all active players
-                foreach ($k in $trackLibrary.Keys) {
-                    Set-PlayerVolume $k
+    $rawInput = Read-Host "  Command"
+    $parts    = $rawInput.Trim().Split(" ")
+    $cmd      = $parts[0].ToLower()
+
+    switch ($cmd) {
+        "q"    { Stop-All; $running = $false }
+        "exit" { Stop-All; $running = $false }
+        "m"    { Stop-All }
+        "mv"   {
+            if ($parts.Length -gt 1) {
+                $newVal = 0
+                if ([int]::TryParse($parts[1], [ref]$newVal)) {
+                    $masterVolume = [Math]::Max(0, [Math]::Min(100, $newVal))
+                    foreach ($k in $trackLibrary.Keys) { Set-PlayerVolume $k }
                 }
             }
         }
-    }
-    elseif ($cmd -eq "s") {
-        if ($parts.Length -gt 1) {
-            $targetKey = $parts[1]
-            if ($trackLibrary.ContainsKey($targetKey)) {
-                $tracks = $trackLibrary[$targetKey].Tracks
-                $currentTrackIdx[$targetKey] = ($currentTrackIdx[$targetKey] + 1) % $tracks.Count
-                
-                $wasPlaying = $isPlaying[$targetKey]
-                $players[$targetKey].Stop()
-                
-                $nextUrl = $tracks[$currentTrackIdx[$targetKey]]
-                $players[$targetKey].Open((New-Object System.Uri($nextUrl)))
-                
-                if ($wasPlaying) {
-                    Set-PlayerVolume $targetKey
-                    $players[$targetKey].Play()
+        "s"    {
+            if ($parts.Length -gt 1) {
+                $targetKey = $parts[1]
+                if ($trackLibrary.ContainsKey($targetKey)) {
+                    $tracks = $trackLibrary[$targetKey].Tracks
+                    $currentTrackIdx[$targetKey] = ($currentTrackIdx[$targetKey] + 1) % $tracks.Count
+                    $wasPlaying = $isPlaying[$targetKey]
+                    $players[$targetKey].Stop()
+                    $nextUrl = $tracks[$currentTrackIdx[$targetKey]]
+                    $players[$targetKey].Open((New-Object System.Uri($nextUrl)))
+                    if ($wasPlaying) {
+                        Set-PlayerVolume $targetKey
+                        $players[$targetKey].Play()
+                    }
                 }
             }
         }
-    }
-    elseif ($trackLibrary.ContainsKey($cmd)) {
-        # Toggle play/pause
-        if ($isPlaying[$cmd]) {
-            $players[$cmd].Pause()
-            $isPlaying[$cmd] = $false
-        } else {
-            Set-PlayerVolume $cmd
-            $players[$cmd].Play()
-            $isPlaying[$cmd] = $true
+        default {
+            if ($trackLibrary.ContainsKey($cmd)) {
+                if ($isPlaying[$cmd]) {
+                    $players[$cmd].Pause()
+                    $isPlaying[$cmd] = $false
+                } else {
+                    Set-PlayerVolume $cmd
+                    $players[$cmd].Play()
+                    $isPlaying[$cmd] = $true
+                }
+            }
         }
     }
 }
 
-# Cleanup on exit
+# Cleanup
 Stop-All
-foreach ($key in $players.Keys) {
-    $players[$key].Close()
-}
+foreach ($key in $players.Keys) { $players[$key].Close() }

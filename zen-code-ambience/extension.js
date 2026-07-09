@@ -1,11 +1,15 @@
 const vscode = require('vscode');
-const fs = require('fs');
-const path = require('path');
-const cp = require('child_process');
+const fs     = require('fs');
+const path   = require('path');
+const cp     = require('child_process');
+
+// ─── Status bar item (persists outside the panel) ─────────────────
+let statusBarItem = null;
 
 class ZenAmbienceViewProvider {
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
+    this._view = null;
   }
 
   resolveWebviewView(webviewView, context, _token) {
@@ -17,33 +21,64 @@ class ZenAmbienceViewProvider {
     };
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+    // ── Receive play-state messages from the webview ───────────────
+    webviewView.webview.onDidReceiveMessage(msg => {
+      if (msg.type !== 'state' || !statusBarItem) return;
+
+      if (msg.active && msg.channels.length > 0) {
+        // Show what's playing in the status bar
+        const label = msg.channels.slice(0, 2).join(' · ') +
+                      (msg.channels.length > 2 ? ` +${msg.channels.length - 2}` : '');
+        statusBarItem.text            = `$(play) ${label}`;
+        statusBarItem.tooltip         = `Zen Ambiator — Playing\n${msg.channels.join(', ')}\n\nClick to open panel`;
+        statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+      } else {
+        statusBarItem.text            = `$(unmute) Zen Ambiator`;
+        statusBarItem.tooltip         = 'Zen Ambiator — Click to open';
+        statusBarItem.backgroundColor = undefined;
+      }
+    });
   }
 
   _getHtmlForWebview(webview) {
     const htmlPath = path.join(this._extensionUri.fsPath, 'webview.html');
-    let htmlContent = fs.readFileSync(htmlPath, 'utf8');
-    return htmlContent;
+    return fs.readFileSync(htmlPath, 'utf8');
   }
 }
 
 function activate(context) {
-  // Spoken Greeting Easter Egg (invokes Windows TTS synthesizer silently in background)
+  // ── Spoken Greeting Easter Egg ────────────────────────────────────
   try {
     const greetingCmd = `powershell -WindowStyle Hidden -Command "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Welcome back, Sir. Antigravity environment is initialized.')"`;
     cp.exec(greetingCmd);
   } catch (e) {
-    console.error("Startup greeting failed:", e);
+    console.error('Startup greeting failed:', e);
   }
 
+  // ── Status bar item ───────────────────────────────────────────────
+  // Shows what's playing even when the sidebar panel is hidden.
+  // Clicking it refocuses the Zen Ambiator panel.
+  statusBarItem         = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 50);
+  statusBarItem.text    = '$(unmute) Zen Ambiator';
+  statusBarItem.tooltip = 'Zen Ambiator — Click to open';
+  statusBarItem.command = 'workbench.view.extension.zen-ambience-container';
+  statusBarItem.show();
+  context.subscriptions.push(statusBarItem);
+
+  // ── Register webview view provider ───────────────────────────────
+  // retainContextWhenHidden: true  →  JS keeps running even when the
+  // panel is hidden/collapsed, so audio never stops mid-session.
   const provider = new ZenAmbienceViewProvider(context.extensionUri);
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider('zen-ambience.view', provider)
+    vscode.window.registerWebviewViewProvider('zen-ambience.view', provider, {
+      webviewOptions: { retainContextWhenHidden: true }
+    })
   );
 }
 
-function deactivate() {}
+function deactivate() {
+  if (statusBarItem) statusBarItem.dispose();
+}
 
-module.exports = {
-  activate,
-  deactivate
-};
+module.exports = { activate, deactivate };

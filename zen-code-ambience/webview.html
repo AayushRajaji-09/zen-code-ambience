@@ -3,733 +3,972 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zen Ambience</title>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none';
+                 style-src   'unsafe-inline' https://fonts.googleapis.com;
+                 font-src    https://fonts.gstatic.com;
+                 script-src  'unsafe-inline';
+                 media-src   https: http: blob:;
+                 img-src     data: blob:;">
+  <title>Zen Ambiator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
   <style>
+    /* ─── Design Tokens ──────────────────────────────────────────── */
     :root {
-      --bg: #0f0f12;
-      --bg-active: rgba(0,242,254,0.08);
-      --surface: rgba(255,255,255,0.05);
-      --surface-hover: rgba(255,255,255,0.08);
-      --border: rgba(255,255,255,0.06);
-      --text: #f5f5f7;
-      --text-secondary: rgba(255,255,255,0.55);
-      --text-tertiary: rgba(255,255,255,0.3);
-      --accent: #00f2fe;
-      --accent-dim: rgba(0,242,254,0.25);
-      --radius: 8px;
-      --bar-height: 48px;
+      --bg:             #09090e;
+      --surface:        rgba(255,255,255,0.04);
+      --surface-hover:  rgba(255,255,255,0.07);
+      --surface-active: rgba(244,63,94,0.09);
+      --border:         rgba(255,255,255,0.055);
+      --border-active:  rgba(244,63,94,0.20);
+
+      --text:           #f4f4f8;
+      --text-secondary: rgba(244,244,248,0.50);
+      --text-tertiary:  rgba(244,244,248,0.25);
+
+      --accent:         #f43f5e;
+      --accent-light:   #fda4af;
+      --accent-glow:    rgba(244,63,94,0.22);
+      --accent-dim:     rgba(244,63,94,0.10);
+
+      --live:           #4ade80;
+      --live-bg:        rgba(74,222,128,0.09);
+
+      --radius:         10px;
+      --radius-sm:      6px;
+      --bar-height:     64px;
+      --ease:           cubic-bezier(0.4,0,0.2,1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ─── Reset ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ─── Body + Atmospheric Background ─────────────────────────── */
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 13px;
+      line-height: 1.4;
+      color: var(--text);
+      background-color: var(--bg);
+
+      /* Atmospheric subtle background — 3 layers:
+         1. Noise grain (SVG data URI, tiled, very low opacity)
+         2. Rose bloom: bottom-left
+         3. Indigo bloom: top-right                              */
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse 90% 55% at 10% 90%, rgba(244,63,94,0.09)  0%, transparent 58%),
+        radial-gradient(ellipse 65% 40% at 90% 8%,  rgba(100,60,220,0.05) 0%, transparent 52%);
+
       display: flex;
       flex-direction: column;
       height: 100vh;
+      overflow: hidden;
       user-select: none;
       -webkit-font-smoothing: antialiased;
     }
 
-    body::-webkit-scrollbar { width: 4px; }
-    body::-webkit-scrollbar-track { background: transparent; }
-    body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+    ::-webkit-scrollbar          { width: 3px; }
+    ::-webkit-scrollbar-track    { background: transparent; }
+    ::-webkit-scrollbar-thumb    { background: rgba(255,255,255,0.08); border-radius: 2px; }
 
+    /* ─── Header (no logo — just wordmark + controls) ─────────── */
     .header {
-      padding: 14px 16px 10px;
+      padding: 11px 14px 9px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
-    .title {
-      font-size: 16px;
+
+    .wordmark {
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
     }
-    .header-actions { display: flex; gap: 6px; align-items: center; }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .active-count {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid rgba(244,63,94,0.18);
+      border-radius: 10px;
+      padding: 1px 7px;
+      display: none;
+      font-variant-numeric: tabular-nums;
+    }
+    .active-count.visible { display: inline; }
+
     .icon-btn {
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      border: none;
+      width: 26px; height: 26px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-secondary);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      transition: all 0.16s var(--ease);
     }
     .icon-btn:hover { background: var(--surface-hover); color: var(--text); }
-    .icon-btn.active { background: var(--bg-active); color: var(--accent); }
 
+    /* ─── Now Playing Strip ──────────────────────────────────────── */
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      min-height: 26px;
+      overflow: hidden;
+    }
+    .now-playing.hidden { display: none; }
+
+    .np-pulse {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      flex-shrink: 0;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.72)} }
+
+    .np-text {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--accent-light);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      font-style: italic;
+    }
+
+    /* ─── Channel List ────────────────────────────────────────────── */
     .channel-list {
       flex: 1;
       overflow-y: auto;
-      padding: 8px 0 80px;
+      padding: 5px 0 var(--bar-height);
     }
 
-    .category { margin-bottom: 2px; }
+    /* ─── Category ────────────────────────────────────────────────── */
+    .category {
+      margin-bottom: 1px;
+      border-top: 1px solid rgba(255,255,255,0.03);
+    }
+    .category:first-child { border-top: none; }
+
     .category-header {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 12px 16px 6px;
+      padding: 11px 14px 5px;
       cursor: pointer;
-      color: var(--text-secondary);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .category-header:hover { color: var(--text); }
-    .category-header .arrow {
-      font-size: 8px;
-      transition: transform 0.2s;
       color: var(--text-tertiary);
-      margin-left: auto;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      transition: color 0.15s;
     }
-    .category-header.collapsed .arrow { transform: rotate(-90deg); }
+    .category-header:hover  { color: var(--text-secondary); }
+    .cat-arrow {
+      font-size: 7px;
+      margin-left: auto;
+      color: var(--text-tertiary);
+      transition: transform 0.2s;
+    }
+    .category-header.collapsed .cat-arrow { transform: rotate(-90deg); }
     .category-body.hidden { display: none; }
 
+    /* ─── Channel Card ────────────────────────────────────────────── */
     .channel-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 16px;
-      margin: 0 8px;
+      padding: 9px 12px;
+      margin: 2px 8px;
       border-radius: var(--radius);
+      border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.15s;
+      position: relative;
+      transition: background 0.16s var(--ease), border-color 0.16s var(--ease), box-shadow 0.22s var(--ease);
+      overflow: hidden;
     }
-    .channel-card:hover { background: var(--surface); }
-    .channel-card.active { background: var(--bg-active); }
 
-    .card-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
+    /* Glowing left accent strip on active */
+    .channel-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 18%; bottom: 18%;
+      width: 2.5px;
+      border-radius: 0 2px 2px 0;
+      background: linear-gradient(to bottom, var(--accent-light), var(--accent));
+      opacity: 0;
+      transition: opacity 0.2s var(--ease);
     }
-    .card-info { display: flex; flex-direction: column; min-width: 0; }
+    .channel-card:hover         { background: var(--surface); border-color: var(--border); }
+    .channel-card.active        { background: var(--surface-active); border-color: var(--border-active); box-shadow: 0 0 20px var(--accent-glow); }
+    .channel-card.active::before { opacity: 1; }
+
+    /* ─── Card Left ───────────────────────────────────────────────── */
+    .card-left {
+      display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;
+    }
+
+    .card-emoji {
+      font-size: 17px;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface);
+      border-radius: 8px;
+      flex-shrink: 0;
+      transition: background 0.16s, box-shadow 0.22s;
+    }
+    .channel-card.active .card-emoji {
+      background: var(--accent-dim);
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    .card-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
     .card-name {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      transition: color 0.15s;
     }
-    .channel-card.active .card-name { color: var(--accent); }
-    .card-meta {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 1px;
-    }
-    .badge {
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-    .badge.radio { background: rgba(0,242,254,0.12); color: var(--accent); }
-    .badge.gen { background: rgba(255,255,255,0.06); color: var(--text-tertiary); }
-    .badge.live { background: rgba(255,69,58,0.12); color: #ff453a; }
+    .channel-card.active .card-name { color: var(--accent-light); }
 
-    .card-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .play-btn {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.12);
-      background: transparent;
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      transition: all 0.2s;
-    }
-    .play-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
-    .channel-card.active .play-btn {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #0f0f12;
-    }
-
-    .skip-btn {
-      background: none; border: none;
-      color: var(--text-tertiary);
-      cursor: pointer;
+    .card-sub {
       font-size: 10px;
-      padding: 2px;
-      opacity: 0;
-      transition: all 0.15s;
+      font-weight: 400;
+      color: rgba(244,244,248,0.36);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .channel-card:hover .skip-btn { opacity: 0.6; }
-    .skip-btn:hover { color: var(--accent); opacity: 1 !important; }
 
+    /* ─── Card Right ──────────────────────────────────────────────── */
+    .card-right {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+
+    /* ─── Badges ──────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+    .badge.live {
+      background: var(--live-bg);
+      color: var(--live);
+      border: 1px solid rgba(74,222,128,0.18);
+    }
+    .badge.live::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--live);
+      animation: blink 1.3s ease-in-out infinite;
+    }
+    .badge.gen {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-tertiary);
+      border: 1px solid var(--border);
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ─── EQ Bars ─────────────────────────────────────────────────── */
     .eq-vis {
-      display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 12px;
-      width: 16px;
-      opacity: 0;
-      transition: opacity 0.2s;
+      display: flex; align-items: flex-end; gap: 2px;
+      height: 14px; width: 18px;
+      opacity: 0; transition: opacity 0.2s;
     }
     .channel-card.active .eq-vis { opacity: 1; }
     .eq-bar {
-      width: 2.5px;
-      border-radius: 1.5px;
-      background: var(--accent);
-      animation: eq-bounce 0.6s ease-in-out infinite alternate;
+      width: 2.5px; border-radius: 2px;
+      background: linear-gradient(to top, var(--accent), var(--accent-light));
+      box-shadow: 0 0 4px var(--accent-glow);
+      animation: eq 0.7s ease-in-out infinite alternate;
     }
-    .eq-bar:nth-child(1) { height: 100%; animation-delay: -0.15s; }
-    .eq-bar:nth-child(2) { height: 55%; animation-delay: -0.4s; }
-    .eq-bar:nth-child(3) { height: 80%; animation-delay: -0.25s; }
-    .eq-bar:nth-child(4) { height: 35%; animation-delay: -0.55s; }
-    .eq-bar:nth-child(5) { height: 65%; animation-delay: -0.35s; }
+    .eq-bar:nth-child(1) { height:100%; animation-delay:-0.15s; }
+    .eq-bar:nth-child(2) { height:55%;  animation-delay:-0.45s; }
+    .eq-bar:nth-child(3) { height:85%;  animation-delay:-0.28s; }
+    .eq-bar:nth-child(4) { height:40%;  animation-delay:-0.62s; }
+    .eq-bar:nth-child(5) { height:70%;  animation-delay:-0.38s; }
+    @keyframes eq { 0%{transform:scaleY(0.2)} 100%{transform:scaleY(1)} }
 
-    @keyframes eq-bounce {
-      0% { transform: scaleY(0.3); }
-      100% { transform: scaleY(1); }
+    /* ─── Play Button ─────────────────────────────────────────────── */
+    .play-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.09);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      transition: all 0.18s var(--ease);
+      flex-shrink: 0;
+    }
+    .play-btn:hover { border-color: rgba(244,63,94,0.4); color: var(--accent); background: var(--accent-dim); }
+    .channel-card.active .play-btn {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+      box-shadow: 0 0 14px var(--accent-glow);
     }
 
-    .track-label {
-      font-size: 10px;
-      color: var(--accent-dim);
-      max-width: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: none;
+    /* ─── Loading indicator ───────────────────────────────────────── */
+    .load-indicator {
+      font-size: 9px; color: var(--text-tertiary);
+      font-style: italic;
+      min-width: 0;
+      /* Only visible when it has text content */
     }
-    .channel-card.active .track-label { display: block; }
+    .load-indicator:empty { display: none; }
+    .load-indicator.err { color: #f87171; }
 
+    /* ─── Bottom Bar ──────────────────────────────────────────────── */
     .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: fixed; bottom: 0; left: 0; right: 0;
       height: var(--bar-height);
-      background: rgba(15,15,18,0.92);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(9,9,14,0.94);
+      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
       border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 16px;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 6px;
+      padding: 8px 14px;
       z-index: 100;
     }
-    .bottom-bar input[type="range"] {
-      flex: 1;
-      height: 3px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: rgba(255,255,255,0.08);
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-      min-width: 60px;
-    }
-    .bottom-bar input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid #0f0f12;
-      box-shadow: 0 0 0 1px rgba(0,242,254,0.2);
-      transition: transform 0.15s;
-    }
-    .bottom-bar input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-    .bottom-bar .vol-pct {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      width: 30px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      flex-shrink: 0;
-    }
-    .bottom-bar .bar-btn {
-      background: var(--surface);
-      border: none;
-      border-radius: 6px;
-      color: var(--text-secondary);
-      cursor: pointer;
-      padding: 6px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      font-family: inherit;
-      transition: all 0.15s;
-      flex-shrink: 0;
-    }
-    .bottom-bar .bar-btn:hover { background: var(--surface-hover); color: var(--text); }
-    .bottom-bar .bar-btn.mute:hover { background: rgba(255,69,58,0.12); color: #ff453a; }
 
-    .loading-msg {
-      font-size: 10px;
-      color: var(--text-tertiary);
-      margin-left: 4px;
-      display: none;
-    }
-    .channel-card.active .loading-msg { display: inline; }
+    .bar-row { display: flex; align-items: center; gap: 8px; }
 
-    @media (max-width: 500px) {
-      .channel-card { padding: 8px 10px; margin: 0 4px; }
-      .card-left { gap: 8px; }
-      .card-name { font-size: 12px; }
-      .card-meta { font-size: 10px; }
-      .bottom-bar { padding: 0 10px; gap: 6px; }
-      .bottom-bar .bar-btn { padding: 4px 8px; font-size: 10px; }
-      .track-label { max-width: 50px; font-size: 9px; }
+    .vol-icon { font-size: 12px; color: var(--text-secondary); flex-shrink: 0; }
+
+    input[type="range"] {
+      flex: 1; height: 3px;
+      -webkit-appearance: none; appearance: none;
+      /* Filled track uses CSS custom property set by JS */
+      background: linear-gradient(
+        to right,
+        var(--accent) 0%,
+        var(--accent) var(--val, 80%),
+        rgba(255,255,255,0.08) var(--val, 80%),
+        rgba(255,255,255,0.08) 100%
+      );
+      border-radius: 2px; outline: none; cursor: pointer;
     }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg);
+      box-shadow: 0 0 0 1.5px var(--accent-glow);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 0 0 3px rgba(244,63,94,0.18); }
+
+    .vol-pct {
+      font-size: 11px; font-weight: 600;
+      color: var(--text-secondary); width: 30px; text-align: right;
+      font-variant-numeric: tabular-nums; flex-shrink: 0;
+    }
+
+    .bar-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-secondary);
+      cursor: pointer; padding: 3px 9px;
+      font-size: 10.5px; font-weight: 600; font-family: inherit;
+      transition: all 0.15s var(--ease); flex-shrink: 0;
+    }
+    .bar-btn:hover { background: var(--surface-hover); color: var(--text); }
+    .bar-btn.on { background: var(--accent-dim); color: var(--accent); border-color: rgba(244,63,94,0.2); }
+
+    /* Sleep timer row */
+    .timer-row { display: flex; align-items: center; gap: 5px; }
+    .timer-label { font-size: 10px; font-weight: 600; color: var(--text-tertiary); flex-shrink: 0; }
+    .timer-btns  { display: flex; gap: 4px; }
+    .timer-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 4px; color: var(--text-tertiary);
+      cursor: pointer; padding: 2px 7px;
+      font-size: 10px; font-weight: 600; font-family: inherit;
+      transition: all 0.15s var(--ease);
+    }
+    .timer-btn:hover { background: var(--surface-hover); color: var(--text-secondary); }
+    .timer-btn.on { background: var(--accent-dim); color: var(--accent); border-color: rgba(244,63,94,0.2); }
+    .timer-cd {
+      font-size: 10px; font-weight: 700; color: var(--accent);
+      font-variant-numeric: tabular-nums; margin-left: auto; flex-shrink: 0;
+    }
+    .timer-cd.hidden { display: none; }
   </style>
 </head>
 <body>
 
+  <!-- ── Header ───────────────────────────────────────────────── -->
   <div class="header">
-    <span class="title">Zen Ambience</span>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="stopAll()" title="Stop all">⊘</button>
+    <span class="wordmark">Zen Ambiator</span>
+    <div class="header-right">
+      <span class="active-count" id="active-count"></span>
+      <button class="icon-btn" id="btn-stop-all" title="Stop everything">■</button>
     </div>
   </div>
 
+  <!-- ── Now Playing ──────────────────────────────────────────── -->
+  <div class="now-playing hidden" id="now-playing">
+    <span class="np-pulse"></span>
+    <span class="np-text" id="np-text"></span>
+  </div>
+
+  <!-- ── Channel List ─────────────────────────────────────────── -->
   <div class="channel-list">
 
-    <!-- NATURE -->
+    <!-- ▸ AMBIENCE ─────────────────────────────────────────── -->
     <div class="category">
-      <div class="category-header" onclick="toggleCategory('nature')">
-        Nature <span class="arrow">▼</span>
+      <div class="category-header" id="hdr-ambience" onclick="toggleCat('ambience')">
+        <span>🌊</span> Ambience <span class="cat-arrow">▼</span>
       </div>
-      <div class="category-body" id="cat-nature">
-        <div class="channel-card" id="card-rain">
+      <div class="category-body" id="cat-ambience">
+
+        <div class="channel-card" id="card-dronezone" onclick="handleClick(event,'dronezone')">
           <div class="card-left">
+            <span class="card-emoji">🎋</span>
             <div class="card-info">
-              <span class="card-name">Heavy Rain</span>
-              <span class="card-meta">Ambient <span class="badge radio">Radio</span></span>
+              <span class="card-name">Drone Zone</span>
+              <span class="card-sub">Textured ambient drone &amp; deep atmosphere</span>
             </div>
           </div>
           <div class="card-right">
-            <span class="track-label" id="track-rain">TRACK 01</span>
             <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-rain"></span>
-            <button class="skip-btn" id="skip-rain">⏭</button>
-            <button class="play-btn" id="play-rain">▶</button>
+            <span class="load-indicator" id="load-dronezone"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-dronezone" onclick="togglePlay(event,'dronezone')">▶</button>
           </div>
         </div>
-        <audio id="audio-rain" loop preload="none" crossorigin="anonymous"></audio>
+
+        <div class="channel-card" id="card-deepspace" onclick="handleClick(event,'deepspace')">
+          <div class="card-left">
+            <span class="card-emoji">🌌</span>
+            <div class="card-info">
+              <span class="card-name">Deep Space</span>
+              <span class="card-sub">Zero-gravity ambient, silence between stars</span>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="load-indicator" id="load-deepspace"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-deepspace" onclick="togglePlay(event,'deepspace')">▶</button>
+          </div>
+        </div>
+
+        <div class="channel-card" id="card-lush" onclick="handleClick(event,'lush')">
+          <div class="card-left">
+            <span class="card-emoji">🌿</span>
+            <div class="card-info">
+              <span class="card-name">Lush</span>
+              <span class="card-sub">Serene new-age, unhurried and still</span>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="load-indicator" id="load-lush"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-lush" onclick="togglePlay(event,'lush')">▶</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- WEATHER -->
+    <!-- ▸ LOUNGE ──────────────────────────────────────────── -->
     <div class="category">
-      <div class="category-header" onclick="toggleCategory('weather')">
-        Weather <span class="arrow">▼</span>
+      <div class="category-header" id="hdr-lounge" onclick="toggleCat('lounge')">
+        <span>🍸</span> Lounge <span class="cat-arrow">▼</span>
       </div>
-      <div class="category-body" id="cat-weather">
-        <div class="channel-card" id="card-thunder">
+      <div class="category-body" id="cat-lounge">
+
+        <div class="channel-card" id="card-illinois" onclick="handleClick(event,'illinois')">
           <div class="card-left">
+            <span class="card-emoji">🎷</span>
             <div class="card-info">
-              <span class="card-name">Thunder Storm</span>
-              <span class="card-meta">Intense <span class="badge radio">Radio</span></span>
+              <span class="card-name">Illinois Street</span>
+              <span class="card-sub">Mid-century jazz, cocktails &amp; warm vinyl</span>
             </div>
           </div>
           <div class="card-right">
-            <span class="track-label" id="track-thunder">TRACK 01</span>
             <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-thunder"></span>
-            <button class="skip-btn" id="skip-thunder">⏭</button>
-            <button class="play-btn" id="play-thunder">▶</button>
+            <span class="load-indicator" id="load-illinois"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-illinois" onclick="togglePlay(event,'illinois')">▶</button>
           </div>
         </div>
-        <audio id="audio-thunder" loop preload="none" crossorigin="anonymous"></audio>
+
+        <div class="channel-card" id="card-fip" onclick="handleClick(event,'fip')">
+          <div class="card-left">
+            <span class="card-emoji">🎙️</span>
+            <div class="card-info">
+              <span class="card-name">FIP Radio</span>
+              <span class="card-sub">French jazz &amp; eclectic world music · Paris</span>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="load-indicator" id="load-fip"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-fip" onclick="togglePlay(event,'fip')">▶</button>
+          </div>
+        </div>
+
+        <div class="channel-card" id="card-sitar" onclick="handleClick(event,'sitar')">
+          <div class="card-left">
+            <span class="card-emoji">🪕</span>
+            <div class="card-info">
+              <span class="card-name">Sitar &amp; Goa</span>
+              <span class="card-sub">Indian classical, ragas &amp; ambient tabla</span>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="load-indicator" id="load-sitar"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-sitar" onclick="togglePlay(event,'sitar')">&#9654;</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- COZY -->
+    <!-- ▸ FOCUS ───────────────────────────────────────────── -->
     <div class="category">
-      <div class="category-header" onclick="toggleCategory('cozy')">
-        Cozy <span class="arrow">▼</span>
+      <div class="category-header" id="hdr-focus" onclick="toggleCat('focus')">
+        <span>🎵</span> Focus <span class="cat-arrow">▼</span>
       </div>
-      <div class="category-body" id="cat-cozy">
-        <div class="channel-card" id="card-train">
+      <div class="category-body" id="cat-focus">
+
+        <div class="channel-card" id="card-groovesalad" onclick="handleClick(event,'groovesalad')">
           <div class="card-left">
+            <span class="card-emoji">🎧</span>
             <div class="card-info">
-              <span class="card-name">Train Journey</span>
-              <span class="card-meta">Movement <span class="badge radio">Radio</span></span>
+              <span class="card-name">Groove Salad</span>
+              <span class="card-sub">Chilled electronica for deep work</span>
             </div>
           </div>
           <div class="card-right">
-            <span class="track-label" id="track-train">TRACK 01</span>
             <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-train"></span>
-            <button class="skip-btn" id="skip-train">⏭</button>
-            <button class="play-btn" id="play-train">▶</button>
+            <span class="load-indicator" id="load-groovesalad"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-groovesalad" onclick="togglePlay(event,'groovesalad')">▶</button>
           </div>
         </div>
-        <div class="channel-card" id="card-cafe">
+
+        <div class="channel-card" id="card-fluid" onclick="handleClick(event,'fluid')">
           <div class="card-left">
+            <span class="card-emoji">💧</span>
             <div class="card-info">
-              <span class="card-name">Cafe Chatter</span>
-              <span class="card-meta">Social <span class="badge radio">Radio</span></span>
+              <span class="card-name">Fluid</span>
+              <span class="card-sub">Peaceful ambient electronica, always flowing</span>
             </div>
           </div>
           <div class="card-right">
-            <span class="track-label" id="track-cafe">TRACK 01</span>
             <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-cafe"></span>
-            <button class="skip-btn" id="skip-cafe">⏭</button>
-            <button class="play-btn" id="play-cafe">▶</button>
+            <span class="load-indicator" id="load-fluid"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-fluid" onclick="togglePlay(event,'fluid')">▶</button>
           </div>
         </div>
-        <audio id="audio-train" loop preload="none" crossorigin="anonymous"></audio>
-        <audio id="audio-cafe" loop preload="none" crossorigin="anonymous"></audio>
+
+        <div class="channel-card" id="card-chillhop" onclick="handleClick(event,'chillhop')">
+          <div class="card-left">
+            <span class="card-emoji">📡</span>
+            <div class="card-info">
+              <span class="card-name">Chillhop Radio</span>
+              <span class="card-sub">Uninterrupted lo-fi, always on</span>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span class="load-indicator" id="load-chillhop"></span>
+            <span class="badge live">Live</span>
+            <button class="play-btn" id="play-chillhop" onclick="togglePlay(event,'chillhop')">▶</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- MUSIC -->
+    <!-- ▸ GENERATED ───────────────────────────────────────── -->
     <div class="category">
-      <div class="category-header" onclick="toggleCategory('music')">
-        Music <span class="arrow">▼</span>
+      <div class="category-header" id="hdr-generated" onclick="toggleCat('generated')">
+        <span>📻</span> Generated <span class="cat-arrow">▼</span>
       </div>
-      <div class="category-body" id="cat-music">
-        <div class="channel-card" id="card-lofi">
+      <div class="category-body" id="cat-generated">
+
+        <div class="channel-card" id="card-whitenoise" onclick="handleClick(event,'whitenoise')">
           <div class="card-left">
-            <div class="card-info">
-              <span class="card-name">Lofi Focus</span>
-              <span class="card-meta">Study <span class="badge radio">Radio</span></span>
-            </div>
-          </div>
-          <div class="card-right">
-            <span class="track-label" id="track-lofi">TRACK 01</span>
-            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-lofi"></span>
-            <button class="skip-btn" id="skip-lofi">⏭</button>
-            <button class="play-btn" id="play-lofi">▶</button>
-          </div>
-        </div>
-        <div class="channel-card" id="card-piano">
-          <div class="card-left">
-            <div class="card-info">
-              <span class="card-name">Deep Focus Piano</span>
-              <span class="card-meta">Instrumental <span class="badge radio">Radio</span></span>
-            </div>
-          </div>
-          <div class="card-right">
-            <span class="track-label" id="track-piano">TRACK 01</span>
-            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-piano"></span>
-            <button class="skip-btn" id="skip-piano">⏭</button>
-            <button class="play-btn" id="play-piano">▶</button>
-          </div>
-        </div>
-        <div class="channel-card" id="card-claudefm">
-          <div class="card-left">
-            <div class="card-info">
-              <span class="card-name">Claude FM</span>
-              <span class="card-meta">Synth <span class="badge radio">Radio</span></span>
-            </div>
-          </div>
-          <div class="card-right">
-            <span class="track-label" id="track-claudefm">TRACK 01</span>
-            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-claudefm"></span>
-            <button class="skip-btn" id="skip-claudefm">⏭</button>
-            <button class="play-btn" id="play-claudefm">▶</button>
-          </div>
-        </div>
-        <div class="channel-card" id="card-lofiradio">
-          <div class="card-left">
-            <div class="card-info">
-              <span class="card-name">Lofi Radio Live</span>
-              <span class="card-meta">24/7 <span class="badge live">LIVE</span></span>
-            </div>
-          </div>
-          <div class="card-right">
-            <span class="track-label" id="track-lofiradio">LIVE</span>
-            <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-lofiradio"></span>
-            <button class="play-btn" id="play-lofiradio">▶</button>
-          </div>
-        </div>
-        <div class="channel-card" id="card-whitenoise">
-          <div class="card-left">
+            <span class="card-emoji">🌫️</span>
             <div class="card-info">
               <span class="card-name">White Noise</span>
-              <span class="card-meta">Focus <span class="badge gen">Generated</span></span>
+              <span class="card-sub">Procedural static, tuned for focus</span>
             </div>
           </div>
           <div class="card-right">
-            <span class="track-label" id="track-whitenoise">PROCEDURAL</span>
             <div class="eq-vis"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-            <span class="loading-msg" id="load-whitenoise"></span>
-            <button class="play-btn" id="play-whitenoise">▶</button>
+            <span class="load-indicator" id="load-whitenoise"></span>
+            <span class="badge gen">⚙ Generated</span>
+            <button class="play-btn" id="play-whitenoise" onclick="togglePlay(event,'whitenoise')">▶</button>
           </div>
         </div>
-        <audio id="audio-lofi" loop preload="none" crossorigin="anonymous"></audio>
-        <audio id="audio-piano" loop preload="none" crossorigin="anonymous"></audio>
-        <audio id="audio-claudefm" loop preload="none" crossorigin="anonymous"></audio>
-        <audio id="audio-lofiradio" loop preload="none" crossorigin="anonymous"></audio>
+
       </div>
     </div>
 
-  </div>
+  </div><!-- /channel-list -->
 
-  <!-- Bottom Bar -->
+  <!-- ── Hidden Audio Elements ────────────────────────────────── -->
+  <!-- preload="none" for live streams — they don't need buffering -->
+  <audio id="audio-dronezone"   preload="none"></audio>
+  <audio id="audio-deepspace"   preload="none"></audio>
+  <audio id="audio-lush"        preload="none"></audio>
+  <audio id="audio-illinois"    preload="none"></audio>
+  <audio id="audio-fip"         preload="none"></audio>
+  <audio id="audio-groovesalad" preload="none"></audio>
+  <audio id="audio-fluid"       preload="none"></audio>
+  <audio id="audio-chillhop"    preload="none"></audio>
+  <audio id="audio-sitar"       preload="none"></audio>
+
+  <!-- ── Bottom Bar ────────────────────────────────────────────── -->
   <div class="bottom-bar">
-    <span style="font-size:11px;color:var(--text-secondary);flex-shrink:0;">Vol</span>
-    <input type="range" id="master-slider" min="0" max="100" value="80">
-    <span class="vol-pct" id="master-vol">80%</span>
-    <button class="bar-btn mute" id="mute-all-btn">Mute</button>
+    <!-- Volume -->
+    <div class="bar-row">
+      <span class="vol-icon">🔊</span>
+      <input type="range" id="vol-slider" min="0" max="100" value="80">
+      <span class="vol-pct" id="vol-pct">80%</span>
+      <button class="bar-btn" id="btn-mute">🔇 Mute</button>
+    </div>
+    <!-- Sleep Timer -->
+    <div class="bar-row timer-row">
+      <span class="timer-label">Sleep</span>
+      <div class="timer-btns">
+        <button class="timer-btn" data-m="15" onclick="setSleep(15)">15m</button>
+        <button class="timer-btn" data-m="30" onclick="setSleep(30)">30m</button>
+        <button class="timer-btn" data-m="60" onclick="setSleep(60)">60m</button>
+        <button class="timer-btn"              onclick="cancelSleep()">Off</button>
+      </div>
+      <span class="timer-cd hidden" id="timer-cd"></span>
+    </div>
   </div>
 
   <script>
-    const NOCTUNE = 'https://raw.githubusercontent.com/karthiknvd/noctune/main/sounds';
-    const SOUNDHELIX = 'https://www.soundhelix.com/examples/mp3';
+    // ─── VS Code API (for status bar & extension communication) ─────
+    // acquireVsCodeApi() is injected by the Antigravity/VS Code host.
+    // Wrapped in try/catch so the panel still works if opened standalone.
+    let vscodeApi = null;
+    try { vscodeApi = acquireVsCodeApi(); } catch(e) {}
 
-    // Dead Zeno.fm streams removed — replaced with working SoundHelix tracks
-    const trackLibrary = {
-      rain:      [`${NOCTUNE}/rain.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-12.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`],
-      thunder:   [`${NOCTUNE}/thunder.mp3`, `${SOUNDHELIX}/SoundHelix-Song-11.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`],
-      train:     [`${NOCTUNE}/train.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`],
-      cafe:      [`${SOUNDHELIX}/SoundHelix-Song-2.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-6.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`],
-      lofi:      [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-5.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`, `${SOUNDHELIX}/SoundHelix-Song-13.mp3`, `${SOUNDHELIX}/SoundHelix-Song-15.mp3`],
-      piano:     [`${SOUNDHELIX}/SoundHelix-Song-3.mp3`, `${SOUNDHELIX}/SoundHelix-Song-7.mp3`, `${SOUNDHELIX}/SoundHelix-Song-10.mp3`, `${SOUNDHELIX}/SoundHelix-Song-14.mp3`, `${SOUNDHELIX}/SoundHelix-Song-16.mp3`, `${SOUNDHELIX}/SoundHelix-Song-8.mp3`],
-      claudefm:  [`${SOUNDHELIX}/SoundHelix-Song-1.mp3`, `${SOUNDHELIX}/SoundHelix-Song-4.mp3`, `${SOUNDHELIX}/SoundHelix-Song-9.mp3`],
-      lofiradio: [`https://streams.fluxfm.de/Chillhop/mp3-128/`],
+    // ─── Stream Library (all 100% live verified) ──────────────────
+    const STREAM = {
+      dronezone:   'https://ice6.somafm.com/dronezone-128-mp3',
+      deepspace:   'https://ice6.somafm.com/deepspaceone-128-mp3',
+      lush:        'https://ice6.somafm.com/lush-128-mp3',
+      illinois:    'https://ice6.somafm.com/illstreet-128-mp3',
+      fip:         'https://icecast.radiofrance.fr/fip-midfi.mp3',
+      groovesalad: 'https://ice6.somafm.com/groovesalad-128-mp3',
+      fluid:       'https://ice6.somafm.com/fluid-128-mp3',
+      chillhop:    'https://streams.fluxfm.de/Chillhop/mp3-128/',
+      sitar:       'https://ice6.somafm.com/suburbsofgoa-128-mp3',
     };
 
-    // White noise generator (procedural, no URL)
-    let whiteNoiseCtx = null;
-    let whiteNoiseNode = null;
-    let whiteNoiseGain = null;
-    let whiteNoisePlaying = false;
+    const META = {
+      dronezone:   { name: 'Drone Zone',      emoji: '🎋' },
+      deepspace:   { name: 'Deep Space',      emoji: '🌌' },
+      lush:        { name: 'Lush',            emoji: '🌿' },
+      illinois:    { name: 'Illinois Street', emoji: '🎷' },
+      fip:         { name: 'FIP Radio',       emoji: '🎙️' },
+      groovesalad: { name: 'Groove Salad',    emoji: '🎧' },
+      fluid:       { name: 'Fluid',           emoji: '💧' },
+      chillhop:    { name: 'Chillhop Radio',  emoji: '📡' },
+      sitar:       { name: 'Sitar & Goa',      emoji: '🪕' },
+      whitenoise:  { name: 'White Noise',     emoji: '🌫️' },
+    };
 
-    const channels = ['rain', 'thunder', 'train', 'cafe', 'lofi', 'piano', 'claudefm', 'lofiradio', 'whitenoise'];
-    const currentTrackIndex = {};
-    channels.forEach(id => { currentTrackIndex[id] = 0; });
+    const LIVE_IDS = Object.keys(STREAM);
+    const ALL_IDS  = [...LIVE_IDS, 'whitenoise'];
 
-    let masterVolume = 80;
+    let masterVol   = 80;
+    let isMuted     = false;
+    let preMuteVol  = 80;
+    const active    = new Set();
 
-    // Initialise track labels
-    function updateTrackLabel(id) {
-      const el = document.getElementById(`track-${id}`);
-      if (!el) return;
-      if (id === 'whitenoise') { el.textContent = 'PROCEDURAL'; return; }
-      if (id === 'lofiradio') { el.textContent = 'LIVE'; return; }
-      const tracks = trackLibrary[id];
-      const idx = currentTrackIndex[id];
-      el.textContent = `TRACK ${String(idx + 1).padStart(2, '0')}`;
+    // ─── White Noise (Web Audio API) ─────────────────────────────
+    let wnCtx  = null;
+    let wnNode = null;
+    let wnGain = null;
+    let wnOn   = false;
+
+    function buildWhiteNoise() {
+      wnCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const n    = 2 * wnCtx.sampleRate;
+      const buf  = wnCtx.createBuffer(1, n, wnCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1;
+      wnNode = wnCtx.createBufferSource();
+      wnNode.buffer = buf;
+      wnNode.loop   = true;
+      wnGain = wnCtx.createGain();
+      wnGain.gain.value = isMuted ? 0 : masterVol / 100;
+      wnNode.connect(wnGain);
+      wnGain.connect(wnCtx.destination);
     }
-    channels.forEach(id => updateTrackLabel(id));
 
-    function getAudio(id) {
-      if (id === 'whitenoise') return null;
-      return document.getElementById(`audio-${id}`);
+    function destroyWhiteNoise() {
+      try { wnNode && wnNode.stop(); } catch(e){}
+      try { wnCtx  && wnCtx.close();  } catch(e){}
+      wnCtx = wnNode = wnGain = null;
     }
 
-    function showLoading(id, msg) {
+    // ─── UI Helpers ───────────────────────────────────────────────
+    function setLoad(id, msg, err = false) {
       const el = document.getElementById(`load-${id}`);
-      if (el) el.textContent = msg || '';
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.toggle('err', err);
     }
 
-    // Play / pause
-    function togglePlay(id) {
+    function setActive(id, on) {
       const card = document.getElementById(`card-${id}`);
-      const btn = document.getElementById(`play-${id}`);
+      const btn  = document.getElementById(`play-${id}`);
+      if (!card) return;
+      card.classList.toggle('active', on);
+      if (btn) btn.innerHTML = on ? '⏸' : '▶';
+      if (on) active.add(id); else active.delete(id);
+      if (!on) setLoad(id, '');
+      refreshUI();
+    }
 
-      // White noise special handling
+    function refreshUI() {
+      // Active count badge
+      const badge = document.getElementById('active-count');
+      if (active.size > 0) {
+        badge.textContent = `${active.size} playing`;
+        badge.classList.add('visible');
+      } else {
+        badge.classList.remove('visible');
+      }
+      // Now playing strip
+      const strip = document.getElementById('now-playing');
+      const text  = document.getElementById('np-text');
+      if (active.size === 0) {
+        strip.classList.add('hidden');
+      } else {
+        strip.classList.remove('hidden');
+        text.textContent = [...active]
+          .map(id => `${META[id].emoji} ${META[id].name}`)
+          .join('  ·  ');
+      }
+      // ── Notify extension host → updates status bar while panel is hidden
+      if (vscodeApi) {
+        vscodeApi.postMessage({
+          type:     'state',
+          active:   active.size > 0,
+          channels: [...active].map(id => META[id].name)
+        });
+      }
+    }
+
+    // ─── Toggle Play ──────────────────────────────────────────────
+    function togglePlay(e, id) {
+      if (e) e.stopPropagation();
+
       if (id === 'whitenoise') {
-        if (!whiteNoisePlaying) {
-          if (!whiteNoiseCtx) {
-            whiteNoiseCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const bufSize = 2 * whiteNoiseCtx.sampleRate;
-            const buf = whiteNoiseCtx.createBuffer(1, bufSize, whiteNoiseCtx.sampleRate);
-            const data = buf.getChannelData(0);
-            for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-            whiteNoiseNode = whiteNoiseCtx.createBufferSource();
-            whiteNoiseNode.buffer = buf;
-            whiteNoiseNode.loop = true;
-            whiteNoiseGain = whiteNoiseCtx.createGain();
-            whiteNoiseGain.gain.value = masterVolume / 100;
-            whiteNoiseNode.connect(whiteNoiseGain);
-            whiteNoiseGain.connect(whiteNoiseCtx.destination);
-          }
-          if (whiteNoiseCtx.state === 'suspended') whiteNoiseCtx.resume();
-          whiteNoiseNode.start(0);
-          whiteNoisePlaying = true;
-          card.classList.add('active');
-          btn.textContent = '⏸';
+        if (!wnOn) {
+          destroyWhiteNoise();
+          buildWhiteNoise();
+          if (wnCtx.state === 'suspended') wnCtx.resume();
+          wnNode.start(0);
+          wnOn = true;
+          setActive('whitenoise', true);
         } else {
-          whiteNoiseNode.stop();
-          if (whiteNoiseCtx) { whiteNoiseCtx.close(); whiteNoiseCtx = null; whiteNoiseNode = null; whiteNoiseGain = null; }
-          whiteNoisePlaying = false;
-          card.classList.remove('active');
-          btn.textContent = '▶';
+          destroyWhiteNoise();
+          wnOn = false;
+          setActive('whitenoise', false);
         }
         return;
       }
 
-      const audio = getAudio(id);
+      const audio = document.getElementById(`audio-${id}`);
       if (!audio) return;
 
       if (audio.paused) {
-        const tracks = trackLibrary[id];
-        const idx = currentTrackIndex[id];
-        audio.src = tracks[idx];
-        audio.volume = masterVolume / 100;
-        showLoading(id, 'Loading...');
-        audio.play().then(() => {
-          card.classList.add('active');
-          btn.textContent = '⏸';
-          showLoading(id, '');
-        }).catch(err => {
-          showLoading(id, 'Failed');
-          console.error(`Playback error [${id}]:`, err);
-        });
+        // Live stream: set src fresh each time (avoids stale connection)
+        audio.src    = STREAM[id];
+        audio.volume = isMuted ? 0 : masterVol / 100;
+        setLoad(id, 'Connecting…');
+        audio.play()
+          .then(() => { setActive(id, true); setLoad(id, ''); })
+          .catch(err => { setLoad(id, 'Failed', true); console.error(`[ZenAmbiator] ${id}:`, err); });
       } else {
         audio.pause();
-        card.classList.remove('active');
-        btn.textContent = '▶';
-        showLoading(id, '');
+        audio.src = ''; // release connection immediately
+        setActive(id, false);
       }
     }
 
-    // Skip to next track
-    function skipTrack(id) {
-      if (id === 'whitenoise' || id === 'lofiradio') return;
-      const tracks = trackLibrary[id];
-      if (!tracks || tracks.length <= 1) return;
-      const audio = getAudio(id);
-      if (!audio) return;
-      const wasPlaying = !audio.paused;
-      currentTrackIndex[id] = (currentTrackIndex[id] + 1) % tracks.length;
-      updateTrackLabel(id);
-      if (wasPlaying) {
-        audio.src = tracks[currentTrackIndex[id]];
-        audio.volume = masterVolume / 100;
-        audio.play().catch(err => console.error(`Skip error [${id}]:`, err));
-      }
+    function handleClick(e, id) {
+      if (e.target.closest('.play-btn')) return;
+      togglePlay(null, id);
     }
 
-    // Master volume
-    function changeMasterVolume(val) {
-      masterVolume = parseInt(val);
-      document.getElementById('master-vol').textContent = `${val}%`;
-      channels.forEach(id => {
-        if (id === 'whitenoise') {
-          if (whiteNoiseGain) whiteNoiseGain.gain.value = masterVolume / 100;
-          return;
-        }
-        const audio = getAudio(id);
-        if (audio && !audio.paused) audio.volume = masterVolume / 100;
+    // ─── Volume ───────────────────────────────────────────────────
+    function applyVolume() {
+      const v = isMuted ? 0 : masterVol / 100;
+      LIVE_IDS.forEach(id => {
+        const a = document.getElementById(`audio-${id}`);
+        if (a) a.volume = v;
       });
+      if (wnGain) wnGain.gain.value = v;
     }
 
-    // Stop all
+    function updateSliderFill(slider) {
+      const pct = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.setProperty('--val', pct + '%');
+    }
+
+    const volSlider = document.getElementById('vol-slider');
+    updateSliderFill(volSlider); // set initial fill
+
+    volSlider.addEventListener('input', function () {
+      masterVol = parseInt(this.value);
+      document.getElementById('vol-pct').textContent = `${masterVol}%`;
+      updateSliderFill(this);
+      if (isMuted) { isMuted = false; syncMuteBtn(); }
+      applyVolume();
+    });
+
+    function toggleMute() {
+      if (!isMuted) { preMuteVol = masterVol; isMuted = true; }
+      else          { masterVol = preMuteVol; isMuted = false; }
+      const sl = document.getElementById('vol-slider');
+      sl.value = isMuted ? 0 : masterVol;
+      updateSliderFill(sl);
+      document.getElementById('vol-pct').textContent = isMuted ? '0%' : `${masterVol}%`;
+      syncMuteBtn();
+      applyVolume();
+    }
+    function syncMuteBtn() {
+      const btn = document.getElementById('btn-mute');
+      btn.textContent = isMuted ? '🔊 Unmute' : '🔇 Mute';
+      btn.classList.toggle('on', isMuted);
+    }
+    document.getElementById('btn-mute').addEventListener('click', toggleMute);
+
+    // ─── Stop All ─────────────────────────────────────────────────
     function stopAll() {
-      channels.forEach(id => {
-        const btn = document.getElementById(`play-${id}`);
-        const card = document.getElementById(`card-${id}`);
-        if (id === 'whitenoise') {
-          if (whiteNoisePlaying) {
-            whiteNoiseNode.stop();
-            if (whiteNoiseCtx) { whiteNoiseCtx.close(); whiteNoiseCtx = null; whiteNoiseNode = null; whiteNoiseGain = null; }
-            whiteNoisePlaying = false;
-          }
-          card.classList.remove('active');
-          if (btn) btn.textContent = '▶';
-          return;
-        }
-        const audio = getAudio(id);
-        if (audio) { audio.pause(); audio.removeAttribute('src'); audio.load(); }
-        card.classList.remove('active');
-        if (btn) btn.textContent = '▶';
-        showLoading(id, '');
+      if (wnOn) { destroyWhiteNoise(); wnOn = false; }
+      LIVE_IDS.forEach(id => {
+        const a = document.getElementById(`audio-${id}`);
+        if (a) { a.pause(); a.src = ''; }
       });
+      ALL_IDS.forEach(id => setActive(id, false));
+    }
+    document.getElementById('btn-stop-all').addEventListener('click', stopAll);
+
+    // ─── Sleep Timer ──────────────────────────────────────────────
+    let sleepEnd  = 0;
+    let sleepTick = null;
+
+    function setSleep(mins) {
+      cancelSleep();
+      sleepEnd = Date.now() + mins * 60000;
+      document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('on'));
+      document.querySelector(`.timer-btn[data-m="${mins}"]`).classList.add('on');
+      const cd = document.getElementById('timer-cd');
+      cd.classList.remove('hidden');
+      updateCD();
+      sleepTick = setInterval(() => {
+        if (Date.now() >= sleepEnd) { fadeStop(); cancelSleep(); }
+        else updateCD();
+      }, 1000);
     }
 
-    // Category collapse
-    function toggleCategory(cat) {
-      const body = document.getElementById(`cat-${cat}`);
-      const header = body.previousElementSibling;
-      body.classList.toggle('hidden');
-      header.classList.toggle('collapsed');
+    function cancelSleep() {
+      if (sleepTick) { clearInterval(sleepTick); sleepTick = null; }
+      document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('on'));
+      const cd = document.getElementById('timer-cd');
+      cd.classList.add('hidden'); cd.textContent = '';
     }
 
-    // Wire up event listeners (no inline onclick for cleaner code)
-    document.addEventListener('DOMContentLoaded', () => {
-      // Master volume slider
-      document.getElementById('master-slider').addEventListener('input', function() {
-        changeMasterVolume(this.value);
-      });
+    function updateCD() {
+      const rem  = Math.max(0, sleepEnd - Date.now());
+      const m    = Math.floor(rem / 60000);
+      const s    = Math.floor((rem % 60000) / 1000);
+      document.getElementById('timer-cd').textContent =
+        `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
 
-      // Mute all button
-      document.getElementById('mute-all-btn').addEventListener('click', stopAll);
+    function fadeStop() {
+      const steps = 40; let step = 0;
+      const orig  = masterVol;
+      const tick  = setInterval(() => {
+        step++;
+        const r = 1 - step / steps;
+        LIVE_IDS.forEach(id => { const a = document.getElementById(`audio-${id}`); if (a) a.volume = r * orig / 100; });
+        if (wnGain) wnGain.gain.value = r * orig / 100;
+        if (step >= steps) { clearInterval(tick); stopAll(); }
+      }, 100);
+    }
 
-      // Channel cards — click to play/pause
-      channels.forEach(id => {
+    // ─── Category Toggle ──────────────────────────────────────────
+    function toggleCat(cat) {
+      document.getElementById(`cat-${cat}`).classList.toggle('hidden');
+      document.getElementById(`hdr-${cat}`).classList.toggle('collapsed');
+    }
+
+    // ─── Audio error handlers ─────────────────────────────────────
+    LIVE_IDS.forEach(id => {
+      const a = document.getElementById(`audio-${id}`);
+      if (!a) return;
+      a.addEventListener('error', () => {
         const card = document.getElementById(`card-${id}`);
-        if (!card) return;
-        card.addEventListener('click', (e) => {
-          if (e.target.closest('.skip-btn')) return;
-          if (e.target.closest('.play-btn')) return;
-          togglePlay(id);
-        });
-
-        const playBtn = document.getElementById(`play-${id}`);
-        if (playBtn) {
-          playBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlay(id);
-          });
-        }
-
-        const skipBtn = document.getElementById(`skip-${id}`);
-        if (skipBtn) {
-          skipBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            skipTrack(id);
-          });
-        }
+        if (!card || !card.classList.contains('active')) return;
+        setLoad(id, 'Reconnecting…', true);
+        setTimeout(() => {
+          if (!document.getElementById(`card-${id}`).classList.contains('active')) return;
+          a.src = STREAM[id];
+          a.volume = isMuted ? 0 : masterVol / 100;
+          a.play().then(() => setLoad(id, '')).catch(() => setLoad(id, 'Stream down', true));
+        }, 3000);
       });
     });
 
-    // Handle audio errors — auto-skip to next track
-    document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
-      audio.addEventListener('error', (e) => {
-        const id = audio.id.replace('audio-', '');
-        console.warn(`Audio error on ${id}:`, e);
-        showLoading(id, 'Error');
-        // Auto-skip on error after a short delay
-        setTimeout(() => {
-          if (!audio.paused) {
-            skipTrack(id);
-            if (!audio.paused) audio.play().catch(() => {});
-          }
-          showLoading(id, '');
-        }, 1500);
-      });
+    // ─── Visibility change — resume AudioContext if auto-suspended ───
+    // retainContextWhenHidden keeps JS alive, but the browser may still
+    // auto-suspend Web Audio API when the panel loses focus.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        if (wnCtx && wnCtx.state === 'suspended') wnCtx.resume();
+      }
     });
   </script>
 </body>

@@ -10,6 +10,16 @@
 !zen-ambiator-macos.command
 !zen-ambiator-macos.app/
 !vscode-extension/
-!docs/
-!extension/
+!docs/chrome/
+!docs/vscode/
+!docs/macos/
+!docs/index.html
+!docs/manifest.json
+!docs/sw.js
+!docs/icons/
 !INSTALL.md
+
+# Local environment files (do NOT commit your real keys)
+.env
+.env.local
+.env.*.local

@@ -9,11 +9,11 @@ Five ways to run it. Pick the one that fits your setup.
 | Method | Dependencies | Install Time | Platform |
 |---|---|---|---|
 | **PWA (Browser)** | None — just a browser | 10 seconds | Windows / macOS / Linux / Android / iOS |
-| **VS Code Extension** | VS Code | 30 seconds | macOS / Windows / Linux |
-| **Chrome Extension** | Chrome / Edge / Brave | 30 seconds | Windows / macOS / Linux / ChromeOS |
-| **Antigravity Extension** | Antigravity IDE | Already installed | Windows / macOS / Linux |
+| **VS Code Extension** | VS Code | 30 seconds | `docs/vscode/` |
+| **Chrome Extension** | Chrome / Edge / Brave | 30 seconds | `docs/chrome/` |
+| **Antigravity Extension** | Antigravity IDE | Already installed | `zen-code-ambience/` |
 | **CLI (PowerShell)** | PowerShell 7+ | 1 minute | Windows |
-| **macOS App** | macOS + mpv | 1 minute | macOS |
+| **macOS App** | macOS + mpv | 1 minute | `docs/macos/` |
 | **CLI (zsh)** | zsh + mpv | 1 minute | Linux |
 
 ---

@@ -87,3 +87,25 @@ If you want to use the mixer directly from your terminal (outside the IDE), run:
   - `mv [Val]` (e.g. `mv 70`) — Set master gain volume.
   - `m` — Mute all.
   - `q` — Quit.
+
+---
+
+## 👤 Maintained & Operated By
+
+<div align="left">
+  <a href="https://github.com/Aayush-Rajaji">
+    <img src="https://github.com/Aayush-Rajaji.png" width="70" height="70" style="border-radius: 50%;" alt="Aayush Rajaji">
+  </a>
+  <br>
+  <strong>Aayush Rajaji</strong>
+  <br>
+  Founder &amp; CBO @ <a href="https://aigyde.com">AIGyde</a> · Founder @ <strong>Greston Global</strong> · Co-Founder @ <a href="https://github.com/Aayush-Rajaji">FounderTube</a>
+  <br>
+  <a href="https://github.com/Aayush-Rajaji">GitHub (@Aayush-Rajaji)</a> · <a href="https://www.linkedin.com/in/aayushrajaji/">LinkedIn</a>
+</div>
+
+---
+
+## 📄 License
+
+MIT License.

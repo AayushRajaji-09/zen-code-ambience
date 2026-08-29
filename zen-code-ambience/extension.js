@@ -48,14 +48,6 @@ class ZenAmbienceViewProvider {
 }
 
 function activate(context) {
-  // ── Spoken Greeting Easter Egg ────────────────────────────────────
-  try {
-    const greetingCmd = `powershell -WindowStyle Hidden -Command "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Welcome back, Sir. Antigravity environment is initialized.')"`;
-    cp.exec(greetingCmd);
-  } catch (e) {
-    console.error('Startup greeting failed:', e);
-  }
-
   // ── Status bar item ───────────────────────────────────────────────
   // Shows what's playing even when the sidebar panel is hidden.
   // Clicking it refocuses the Zen Ambiator panel.

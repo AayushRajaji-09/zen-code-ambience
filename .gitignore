@@ -23,3 +23,6 @@
 .env
 .env.local
 .env.*.local
+
+# Local-only synthesis and vault-derived summaries
+workspace-synth/
